@@ -1,0 +1,28 @@
+ModOptionsAPI Patch for GUIAPI
+
+Author: Clinton Alexander
+Version: 0.6
+Description: A patch for GUIAPI and ModOptionsAPI compatibility
+
+-----------------
+Installation
+-----------------
+
+0) DO NOT INSTALL THIS BEFORE GUIAPI. DO NOT INSTALL THIS IF YOU DO NOT USE GUIAPI
+
+1) Find your minecraft.jar (check note below)*
+
+2) Open the minecraft.jar file in WinRAR or 7zip (do not extract it)
+
+3) Extract the contents of the GuiApiPatch ZIP file
+
+4) Copy the files into your minecraft.jar 
+
+6) Delete META-INF folder IF it exists in the minecraft.jar
+
+7) Run Minecraft
+
+
+* Windows: <your user folder>/AppData/Roaming/.minecraft/bin/
+* Mac: Home -> Library -> Application Support -> Minecraft -> bin
+* Linux: ~/.minecraft/bin/

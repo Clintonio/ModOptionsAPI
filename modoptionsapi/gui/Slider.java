@@ -1,7 +1,7 @@
-package modoptionsapi;
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+package modoptionsapi.gui; 
+
+import modoptionsapi.ModSliderOption;
+import modoptionsapi.ModOptionsGuiController;
 
 import net.minecraft.src.*;
 import net.minecraft.client.Minecraft;
@@ -9,8 +9,12 @@ import org.lwjgl.opengl.GL11;
 
 /**
 * A replacement for the default MC Slider. 
+*
+* @author	Clinton Alexander
+* @version	1.0.0.0
+* @since	0.5
 */
-public class MOGuiSlider extends GuiButton {
+public class Slider extends GuiButton {
 	// CONSTANTS
 	private static final int SMALL_WIDTH = 150;
 	private static final int WIDE_WIDTH  = 200;
@@ -32,7 +36,7 @@ public class MOGuiSlider extends GuiButton {
 	* @param	gui			Gui representing this object
 	* @param	worldMode	True when using world values
 	*/
-    public MOGuiSlider(int i, int j, int k, ModSliderOption op, 
+    public Slider(int i, int j, int k, ModSliderOption op, 
 					   ModOptionsGuiController gui, boolean worldMode) {
 		super(i, j, k, 150, 20,  gui.getDisplayString(op, worldMode));
 		this.gui		= gui;

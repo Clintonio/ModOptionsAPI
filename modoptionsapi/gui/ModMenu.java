@@ -1,9 +1,12 @@
-package modoptionsapi;
+package modoptionsapi.gui;
+
+import modoptionsapi.*;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -12,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 * @author	Clinton Alexander (with credit to Mojang for the drawscreen code)
 * @since	0.6
 */
-public class GuiModScrollOptions extends GuiScreen {
+public class ModMenu extends GuiScreen {
 	/**
 	* Currently selected button
 	*/
@@ -31,7 +34,6 @@ public class GuiModScrollOptions extends GuiScreen {
     protected String screenTitle;
     private GuiScreen parentScreen;
     private GameSettings options;
-    private int buttonId;
 	
 	/**
 	* Current set of options that we are displaying
@@ -55,14 +57,14 @@ public class GuiModScrollOptions extends GuiScreen {
 	/**
 	* Initilise options menu gui screen
 	*/
-    public GuiModScrollOptions(GuiScreen guiscreen) {
+    public ModMenu(GuiScreen guiscreen) {
 		this(guiscreen, "Mod Options List", false, false);
     }
 	
 	/**
 	* Initialise world options menu with a named world
 	*/
-	public GuiModScrollOptions(GuiIngameMenu guiscreen, String name, boolean mult) {
+	public ModMenu(GuiIngameMenu guiscreen, String name, boolean mult) {
 		this(guiscreen, "World Specific Mod Options", true, mult);
 		worldName = name;
 	}
@@ -73,7 +75,7 @@ public class GuiModScrollOptions extends GuiScreen {
 	* @param	name	Name of world loaded
 	* @param	multi	True if in a multiplayer world
 	*/
-	public GuiModScrollOptions(GuiScreen guiscreen, ModOptions options, String name, boolean multi) {
+	public ModMenu(GuiScreen guiscreen, ModOptions options, String name, boolean multi) {
         this(guiscreen, options.getName() + " Options", true, multi);
 		modOptions 		= options;
 		worldName		= name;
@@ -83,7 +85,7 @@ public class GuiModScrollOptions extends GuiScreen {
 	/**
 	* Initialise a particular set of options gui
 	*/
-	public GuiModScrollOptions(GuiScreen guiscreen, ModOptions options) {
+	public ModMenu(GuiScreen guiscreen, ModOptions options) {
         this(guiscreen, options.getName() + " Options", false, false);
 		modOptions 		= options;
 		gui 			= modOptions.getGuiController();
@@ -92,14 +94,17 @@ public class GuiModScrollOptions extends GuiScreen {
 	/**
 	* Initialise settings
 	*/
-	private GuiModScrollOptions(GuiScreen parent, String title, 
+	private ModMenu(GuiScreen parent, String title, 
 						  boolean world, boolean mult) {
 		super();
 		parentScreen 		= parent;
-		buttonId 			= -1;
 		worldMode 			= world;
 		screenTitle			= title;
 		multiplayerWorld	= mult;
+		
+		if(!Keyboard.areRepeatEventsEnabled()) {
+			Keyboard.enableRepeatEvents(true);
+		}
 	}
 	
     public void initGui() {
@@ -207,7 +212,12 @@ public class GuiModScrollOptions extends GuiScreen {
 		}
 		
 		if(op instanceof ModSliderOption) {
-			MOGuiSlider btn = new MOGuiSlider(id, xPos, yPos, (ModSliderOption) op, gui, worldMode);
+			Slider btn = new Slider(id, xPos, yPos, (ModSliderOption) op, gui, worldMode);
+			btn.setWide(isWide);
+			controlList.add(btn);
+		} else if(op instanceof ModTextOption) {
+			int guiWidth = isWide ? 200 : 150;
+			TextField btn = new TextField(id, this, fontRenderer, xPos, yPos, (ModTextOption) op, gui, !worldMode);
 			btn.setWide(isWide);
 			controlList.add(btn);
 		} else if(!isWide) {
@@ -262,7 +272,7 @@ public class GuiModScrollOptions extends GuiScreen {
 		int top				= getSliderAreaTop();
 		
 		for(int k = 0; k < controlList.size(); k++) {
-            GuiButton btn = (GuiButton)controlList.get(k);
+			GuiButton btn = (GuiButton) controlList.get(k);
 			if(btn.id != 200) {
 				int y = btn.yPosition;
 				btn.yPosition = y - contentBottom;
@@ -298,9 +308,7 @@ public class GuiModScrollOptions extends GuiScreen {
 				for(int l = 0; l < controlList.size(); l++) {
 					GuiButton guibutton = (GuiButton)controlList.get(l);
 					if(buttonPressed(guibutton, i, j, false)) {
-						curButton = guibutton;
-						mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-						actionPerformed(guibutton);
+						setCurrentButton(guibutton);
 					}
 				}
 			}
@@ -323,11 +331,22 @@ public class GuiModScrollOptions extends GuiScreen {
 	*/
     protected void keyTyped(char c, int i) {
         if(i == 1) {
-			saveChanges();
-            mc.displayGuiScreen(null);
-            mc.setIngameFocus();
-        }
+			changeScreen(null);
+        } else if(curButton instanceof TextField) {
+			handleTextAction((TextField) curButton, c, i);
+		}
     }
+	
+	/**
+	* Handle a text input action to the given button
+	*
+	* @param	txt		Text area being updated
+	* @param	c		Character input
+	* @param	i		Integer value of input
+	*/
+	private void handleTextAction(TextField txt, char c, int i) {
+		txt.textboxKeyTyped(c, i);
+	}
 		
 	/**
 	* Mouse has left clicked the given button
@@ -337,29 +356,28 @@ public class GuiModScrollOptions extends GuiScreen {
     protected void actionPerformed(GuiButton guibutton) {
 		// We have clicked the "Done" button
         if(guibutton.id == 200) {
-			saveChanges();
-            mc.displayGuiScreen(parentScreen);
+			changeScreen(parentScreen);
 		// We are in the mod menu and picking a mod
         } else if(modOptions == null) {
 			// Choose the type of mod options
 			ModOptions modOp = ModOptionsAPI.getModOptions(guibutton.displayString);
 			
 			if(worldMode) {
-				mc.displayGuiScreen(new GuiModScrollOptions(this, modOp, worldName, multiplayerWorld));
+				mc.displayGuiScreen(new ModMenu(this, modOp, worldName, multiplayerWorld));
 			} else {
-				mc.displayGuiScreen(new GuiModScrollOptions(this, modOp));
+				mc.displayGuiScreen(new ModMenu(this, modOp));
 			}
 		// A slider has been dragged
-        } else if((guibutton.id < 100 && (guibutton instanceof MOGuiSlider))) {	
+        } else if((guibutton.id < 100 && (guibutton instanceof Slider))) {	
 			// Ignore, handled internally
 		// A sub options button has been pressed
 		} else if((guibutton.id > 100) && (guibutton.id < 200)) {
 			ModOptions modOp = modOptions.getSubOption(guibutton.displayString);
 			
 			if(worldMode) {
-				mc.displayGuiScreen(new GuiModScrollOptions(this, modOp, worldName, multiplayerWorld));
+				mc.displayGuiScreen(new ModMenu(this, modOp, worldName, multiplayerWorld));
 			} else {
-				mc.displayGuiScreen(new GuiModScrollOptions(this, modOp));
+				mc.displayGuiScreen(new ModMenu(this, modOp));
 			}
 		// A button has been pressed
 		} else if(guibutton.id < 100) {
@@ -406,13 +424,42 @@ public class GuiModScrollOptions extends GuiScreen {
 	* @param	k	1 for right click, 0 for left
 	*/
     protected void mouseMovedOrUp(int i, int j, int k) {
-        if(curButton != null && k == 0) {
+		// Text fields need constant focus, so do not set curbutton to null
+		// when a textbox is focused
+		if(!(curButton instanceof TextField) && curButton != null
+				 && k == 0) {
             curButton.mouseReleased(i, j);
             curButton = null;
         } else if((draggingSlider) && (k == 0)){
 			draggingSlider = false;
 		}
     }
+	
+	/**
+	* What to do on screen updates
+	*/
+	public void updateScreen() {
+		super.updateScreen();
+		
+		// Update all text field cursor blinking
+		for(Object obj : controlList) {
+			if(obj instanceof TextField) {
+				((TextField) obj).updateCursorCounter();
+			}
+		}
+	}
+	
+	/**
+	* Change the screen and perform cleanup actions
+	*
+	* @param	newscreen
+	*/
+	public void changeScreen(GuiScreen screen) {
+		Keyboard.enableRepeatEvents(false);
+		saveChanges();
+		mc.displayGuiScreen(null);
+		mc.setIngameFocus();
+	}
 	
 	/**
 	* Drag the slider about
@@ -423,6 +470,28 @@ public class GuiModScrollOptions extends GuiScreen {
 	private void sliderDragged(int i, int j) {
 		if(draggingSlider) {
 			setSliderMiddle(j);
+		}
+	}
+	
+	/**
+	* Set the currently selected button
+	*
+	* @param	btn		Button
+	*/
+	private void setCurrentButton(GuiButton btn) {
+		if(curButton instanceof TextField) {
+			((TextField) curButton).setFocused(false);
+		}
+		
+		curButton = btn;
+		
+		if(curButton instanceof TextField) {
+			((TextField) curButton).setFocused(true);
+		}
+		
+		if(curButton != null) {
+			mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+			actionPerformed(curButton);
 		}
 	}
 
@@ -456,8 +525,8 @@ public class GuiModScrollOptions extends GuiScreen {
 			if((btn.yPosition > bottom) && ((btn.yPosition + 20) < top)) {
 				// Need to send the type of click to the slider due to
 				// dragging behaviour
-				if(btn instanceof MOGuiSlider) {
-					flag = ((MOGuiSlider) btn).altMousePressed(mc, i, j, rightClick);
+				if(btn instanceof Slider) {
+					flag = ((Slider) btn).altMousePressed(mc, i, j, rightClick);
 				} else {
 					if(btn.mousePressed(mc, i, j)) {
 						flag = true;
@@ -494,6 +563,7 @@ public class GuiModScrollOptions extends GuiScreen {
 		}
 		
 		draggingSlider = true;
+		setCurrentButton(curButton);
 	}
 	
 	/**
@@ -693,8 +763,10 @@ public class GuiModScrollOptions extends GuiScreen {
 			btn.displayString = optionPressed((ModBooleanOption) option);
 		} else if(option instanceof ModMappedMultiOption) {
 			btn.displayString = optionPressed((ModMappedMultiOption) option);
-		} else if(btn instanceof MOGuiSlider) {
-			((MOGuiSlider) btn).updateDisplayString();
+		} else if(btn instanceof Slider) {
+			((Slider) btn).updateDisplayString();
+		} else if(option instanceof ModTextOption) {
+			// Ignore
 		}
 	}
 	

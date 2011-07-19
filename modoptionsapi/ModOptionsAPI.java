@@ -292,18 +292,9 @@ public class ModOptionsAPI {
 		} else if(type.equals("mappedmulti")) {
 			mo = (ModOption) parseMappedMultiOption(name, params, mod);
 		} else if(type.equals("slider")) {
-			try {
-				if(params.length > 1) {
-					mo = (ModOption) new ModSliderOption(name, Integer.parseInt(params[0].trim()), 
-														 Integer.parseInt(params[1].trim()));
-				} else {
-					mo = (ModOption) new ModSliderOption(name);
-				}
-			} catch (NumberFormatException e) {
-				System.out.println("Number format for high or low value invalid for option " 
-									+ name + " in mod " + mod.getName());
-				mo = (ModOption) new ModSliderOption(name);
-			}
+			mo = parseSliderOption(name, params, mod);
+		} else if(type.equals("text")) {
+			mo = parseTextOption(name, params, mod);
 		} else {
 			throw new IncompatibleOptionTypeException(type + " is an invalid option type in mod " + mod.getName());
 		}
@@ -333,6 +324,56 @@ public class ModOptionsAPI {
 									+ name + " in mod " + mod.getName());
 			}
 		};
+		
+		return mo;
+	}
+		
+	/**
+	* Parse a slider option into memory
+	*
+	* @param	line	line to parse
+	* @param	params	Parameters
+	* @param	mod		Mod being parsed
+	* @return	New current mod
+	*/
+	private static ModOption parseSliderOption(String name, String[] params, ModOptions mod) {
+		ModSliderOption mo;
+		try {
+			if(params.length > 1) {
+				mo = new ModSliderOption(name, Integer.parseInt(params[0].trim()), 
+													 Integer.parseInt(params[1].trim()));
+			} else {
+				mo = new ModSliderOption(name);
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Number format for high or low value invalid for option " 
+								+ name + " in mod " + mod.getName());
+			mo = new ModSliderOption(name);
+		}
+		
+		return mo;
+	}
+	
+	/**
+	* Parse a text option into memory
+	*
+	* @param	name	Name of option
+	* @param	params	Parameters for option
+	* @param	mod		Mod we are parsing into
+	*/
+	private static ModOption parseTextOption(String name, String[] params, ModOptions mod) {
+		ModOption mo;
+		try {
+			if(params.length > 1) {
+				mo = new ModTextOption(name, Integer.parseInt(params[0].trim()));
+			} else {
+				mo = new ModTextOption(name);
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Number must be a valid integer for " + name + 
+							   " in mod " + mod.getName() + ". Using infinite");
+			mo = new ModTextOption(name);
+		}
 		
 		return mo;
 	}
@@ -387,6 +428,7 @@ public class ModOptionsAPI {
 		
 		return cur;
 	}
+
 	
 	/**
 	* Check if the line is a section

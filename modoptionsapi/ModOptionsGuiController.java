@@ -1,5 +1,7 @@
 package modoptionsapi;
 
+import modoptionsapi.gui.*;
+
 import java.util.LinkedList;
 import java.util.Hashtable;
 
@@ -136,6 +138,8 @@ public class ModOptionsGuiController {
 				} else if(o instanceof ModBooleanOption) {
 					ModBooleanOption o2 = (ModBooleanOption) o;
 					value = o2.getStringValue(o2.getLocalValue());
+				} else if(o instanceof ModTextOption) {
+					value = ((ModTextOption) o).getLocalValue();
 				}
 			} else {
 				if(o instanceof ModSliderOption) {
@@ -149,6 +153,8 @@ public class ModOptionsGuiController {
 				} else if(o instanceof ModBooleanOption) {
 					ModBooleanOption o2 = (ModBooleanOption) o;
 					value = o2.getStringValue(o2.getGlobalValue());
+				} else if(o instanceof ModTextOption) {
+					value = ((ModTextOption) o).getGlobalValue();
 				}
 			}
 		}

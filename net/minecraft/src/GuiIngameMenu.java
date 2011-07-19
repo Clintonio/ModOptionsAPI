@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 // START MODOPTIONSAPI
 //====================
 import modoptionsapi.ModOptions;
-import modoptionsapi.GuiModScrollOptions;
+import modoptionsapi.gui.ModMenu;
 //====================
 // END MODOPTIONSAPI
 //====================
@@ -89,11 +89,11 @@ public class GuiIngameMenu extends GuiScreen
 				// By definition it must exist
 				String[] parts = mc.gameSettings.lastServer.split("_");
 				String name = parts[0];
-				mc.displayGuiScreen(new GuiModScrollOptions(this, name, true));
+				mc.displayGuiScreen(new ModMenu(this, name, true));
 			} else {
 				// Get the world name
 				String name = mc.theWorld.getWorldInfo().getWorldName();
-				mc.displayGuiScreen(new GuiModScrollOptions(this, name, false));
+				mc.displayGuiScreen(new ModMenu(this, name, false));
 			}
 		}
 		//====================

@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import modoptionsapi.*; 
+import modoptionsapi.gui.ModMenu; 
 
 public class GuiOptions extends GuiScreen
 {
@@ -81,7 +81,7 @@ public class GuiOptions extends GuiScreen
 		//============
 		if(guibutton.id == 301) {
 			mc.gameSettings.saveOptions();
-			mc.displayGuiScreen(new GuiModScrollOptions(this));
+			mc.displayGuiScreen(new ModMenu(this));
 		}
 		//============
 		// OptionsAPI END

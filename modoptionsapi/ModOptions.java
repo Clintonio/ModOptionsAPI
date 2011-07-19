@@ -88,6 +88,66 @@ public class ModOptions {
 	}
 	
 	/**
+	* Add a text option with infinite max length
+	*
+	* @param	name	Name of text input
+	*/
+	public void addTextOption(String name) {
+		ModTextOption option = new ModTextOption(name);
+		addOption(option);
+	}	
+	
+	/**
+	* Add a text option with infinite max length
+	* with a default value
+	* 
+	* @param	name	Name of text input
+	* @param	value	Default value of input
+	*/
+	public void addTextOption(String name, String value) {
+		ModTextOption option = new ModTextOption(name);
+		option.setGlobalValue(value);
+		addOption(option);
+	}
+	
+	/**
+	* Add a text option with infinite max length
+	* 
+	* @param	name	Name of text input
+	* @param	maxlen	Maximum length the user can input. 0 or less is infinite
+	*/
+	public void addTextOption(String name, int maxlen) {
+		ModTextOption option = new ModTextOption(name, maxlen);
+		addOption(option);
+	}
+	
+	/**
+	* Add a text option with infinite max length with a default
+	* value
+	* 
+	* @param	name	Name of text input
+	* @param	value	Default value for input
+	* @param	maxlen	Maximum length the user can input. 0 or less is infinite
+	*/
+	public void addTextOption(String name, String value, int maxlen) {
+		ModTextOption option = new ModTextOption(name, maxlen);
+		option.setGlobalValue(value);
+		addOption(option);
+	}
+	
+	/**
+	* Add a text option with infinite max length with a default
+	* value
+	* 
+	* @param	name	Name of text input
+	* @param	value	Default value for input
+	* @param	maxlen	Maximum length the user can input. 0 or less is infinite
+	*/
+	public void addTextOption(String name, String value, Integer maxlen) {
+		addTextOption(name, value, (int) maxlen);
+	}
+	
+	/**
 	* Add a multiple selector
 	*
 	* @param	name	Name of selector
@@ -95,7 +155,7 @@ public class ModOptions {
 	*/
 	public void addMultiOption(String name, String[] values) {
 		ModMultiOption option = new ModMultiOption(name, values);
-		options.put(name, option);
+		addOption(option);
 	}
 	
 	/**
@@ -116,7 +176,7 @@ public class ModOptions {
 				option.addValue(keys[x], values[x]);
 			}
 			
-			options.put(name, option);
+			addOption(option);
 		}
 	}
 	
@@ -138,7 +198,7 @@ public class ModOptions {
 				option.addValue(new Integer(keys[x]), values[x]);
 			}
 			
-			options.put(name, option);
+			addOption(option);
 		}
 	}
 	
@@ -149,7 +209,7 @@ public class ModOptions {
 	*/
 	public void addToggle(String name) {
 		ModBooleanOption option = new ModBooleanOption(name);
-		options.put(name, option);
+		addOption(option);
 	}
 	
 	/**
@@ -159,7 +219,7 @@ public class ModOptions {
 	*/
 	public void addSlider(String name) {
 		ModSliderOption option = new ModSliderOption(name);
-		options.put(name, option);
+		addOption(option);
 	}
 	
 	/**
@@ -171,7 +231,7 @@ public class ModOptions {
 	*/
 	public void addSlider(String name, int low, int high) {
 		ModSliderOption option = new ModSliderOption(name, low, high);
-		options.put(name, option);
+		addOption(option);
 	}
 	
 	//=========================
@@ -326,6 +386,26 @@ public class ModOptions {
 	}
 	
 	/**
+	* Get the value of a text input field
+	*
+	* @since	0.7
+	* @throws	NoSuchOptionException	When no option is present
+	* @param	name					Name of option
+	* @return	Value of a toggle option
+	*/
+	public String getTextValue(String name) throws NoSuchOptionException {
+		ModOption option = options.get(name);
+		
+		if(option == null) {
+			throw new NoSuchOptionException("No option named " + name);
+		} else if(!(option instanceof ModTextOption)) {
+			throw new NoSuchOptionException("Option " + name + " is not a text option");
+		} else {
+			return ((ModTextOption) option).getValue();
+		}
+	}
+	
+	/**
 	* Returns a single named toggle value
 	*
 	* @since	0.6.1
@@ -433,6 +513,8 @@ public class ModOptions {
 		if(m instanceof ModMultiOption) {
 			ModMultiOption mo = (ModMultiOption) m;
 			mo.setGlobalValue(value);
+		} else if(m instanceof ModTextOption) {
+			((ModTextOption) m).setGlobalValue(value);
 		} else {
 			throw new IncompatibleOptionTypeException();
 		}

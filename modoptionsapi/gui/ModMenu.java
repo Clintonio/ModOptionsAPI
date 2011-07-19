@@ -453,11 +453,14 @@ public class ModMenu extends GuiScreen {
 	* @param	newscreen
 	*/
 	public void changeScreen(GuiScreen screen) {
-		Keyboard.enableRepeatEvents(false);
 		saveChanges();
 		mc.displayGuiScreen(screen);
-		
-		if(worldMode) {
+		// Re-disable repeat keypress
+		if(!(screen instanceof ModMenu)) {
+			Keyboard.enableRepeatEvents(false);
+		}
+		// If ingame, set to ingame focus
+		if(worldMode && (screen == null)) {
 			mc.setIngameFocus();
 		}
 	}

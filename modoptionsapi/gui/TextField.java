@@ -134,16 +134,27 @@ public class TextField extends GuiButton {
     public void drawButton(Minecraft minecraft, int i, int j) {
 		String 	text		= getText();
 		String	name		= option.getName();
+		
+		int 	maxlen		= option.getMaxLength();
 		int 	len			= text.length();
+		int		padding		= 30;
+		
+		String 	counterStr	= (maxlen > 0) ?  "(" + len + "/" + maxlen + ")" : "";
 		
 		int 	nameWidth	= fontRenderer.getStringWidth(name);
 		int 	textWidth	= fontRenderer.getStringWidth(text);
+		int		counterWidth= fontRenderer.getStringWidth(counterStr);
+		
+		// Remove excess padding when there is no counter
+		if(maxlen <= 0) {
+			padding = padding - 10;
+		}
 		
 		// Reduce string until it is a decent length.
 		// Don't worry about optimising too much, can optimise
 		// if it becomes an issue
-		if(nameWidth + textWidth + 20 > 300) {
-			while(nameWidth + textWidth + 20 > 300) {	
+		if(nameWidth + textWidth + counterWidth + padding > width) {
+			while(nameWidth + textWidth + counterWidth + padding > width) {	
 				text = text.substring(1, len - 1);
 				len--;
 				textWidth = fontRenderer.getStringWidth(text);
@@ -158,6 +169,14 @@ public class TextField extends GuiButton {
 			
             drawString(fontRenderer, (new StringBuilder()).append(text).append(flag ? "_" : "").toString(), 
 					   xPosition + nameWidth + 10, yPosition + (height - 8) / 2, 0xe0e0e0);
+			
+		
+			// Add a max length counter
+			if(maxlen > 0) {
+				drawString(fontRenderer, counterStr, 
+				   xPosition + 300 - 5 - counterWidth,
+				   yPosition + (height - 8) / 2, 0x707070);
+			}
         } else {
             drawString(fontRenderer, getText(), xPosition + 4, yPosition + (height - 8) / 2, 0x707070);
         }

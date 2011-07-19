@@ -63,7 +63,12 @@ public class ModOptionsGuiController {
 	* @param	o	Check if this option is wide
 	*/
 	public boolean isWide(ModOption o) {
-		return wide.contains(o.getName());
+		// Text options are always wide.
+		if(o instanceof ModTextOption) {
+			return true;
+		} else {
+			return wide.contains(o.getName());
+		}
 	}
 	
 	/**

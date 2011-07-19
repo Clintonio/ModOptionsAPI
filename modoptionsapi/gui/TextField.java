@@ -27,6 +27,11 @@ public class TextField extends GuiButton {
 	* Whether to use global mode or not
 	*/
 	private boolean global;
+
+    private final FontRenderer fontRenderer;
+    private int cursorCounter;
+    public boolean isFocused;
+    private GuiScreen parentGuiScreen;
 	
     public TextField(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j,
 						ModTextOption op, ModOptionsGuiController gui, boolean global) {
@@ -35,9 +40,9 @@ public class TextField extends GuiButton {
         enabled = true;
         parentGuiScreen = guiscreen;
         fontRenderer = fontrenderer;
-        xPosition = i;
+        xPosition = i - 50;
         yPosition = j;
-        width = 200;
+        width = 300;
         height = 20;
 		option = op;
 		this.global = global;
@@ -56,9 +61,11 @@ public class TextField extends GuiButton {
 	* @param	s		New string to display and use for option value
 	*/
     protected void setText(String s) {
-		if(s.length() > option.getMaxLength()) {
-			s = s.substring(0, option.getMaxLength());
+		int maxlen = option.getMaxLength();
+		if((s.length() > maxlen) && (maxlen > 0)) {
+			s = s.substring(0, maxlen - 1);
 		}
+		
 		if(global) {
 			option.setGlobalValue(s);
 		} else {
@@ -121,19 +128,38 @@ public class TextField extends GuiButton {
         isFocused = flag;
     }
 
+	/**
+	* Draw a textarea with a label inside and an editable text space
+	*/
     public void drawButton(Minecraft minecraft, int i, int j) {
+		String 	text		= getText();
+		String	name		= option.getName();
+		int 	len			= text.length();
+		
+		int 	nameWidth	= fontRenderer.getStringWidth(name);
+		int 	textWidth	= fontRenderer.getStringWidth(text);
+		
+		// Reduce string until it is a decent length.
+		// Don't worry about optimising too much, can optimise
+		// if it becomes an issue
+		if(nameWidth + textWidth + 20 > 300) {
+			while(nameWidth + textWidth + 20 > 300) {	
+				text = text.substring(1, len - 1);
+				len--;
+				textWidth = fontRenderer.getStringWidth(text);
+			}
+		}
+		
         drawRect(xPosition - 1, yPosition - 1, xPosition + width + 1, yPosition + height + 1, 0xffa0a0a0);
         drawRect(xPosition, yPosition, xPosition + width, yPosition + height, 0xff000000);
         if(enabled) {
+			drawString(fontRenderer, option.getName(), xPosition + 4, yPosition + (height - 8) / 2, 0x707070);
             boolean flag = isFocused && (cursorCounter / 6) % 2 == 0;
-            drawString(fontRenderer, (new StringBuilder()).append(getText()).append(flag ? "_" : "").toString(), xPosition + 4, yPosition + (height - 8) / 2, 0xe0e0e0);
+			
+            drawString(fontRenderer, (new StringBuilder()).append(text).append(flag ? "_" : "").toString(), 
+					   xPosition + nameWidth + 10, yPosition + (height - 8) / 2, 0xe0e0e0);
         } else {
             drawString(fontRenderer, getText(), xPosition + 4, yPosition + (height - 8) / 2, 0x707070);
         }
     }
-
-    private final FontRenderer fontRenderer;
-    private int cursorCounter;
-    public boolean isFocused;
-    private GuiScreen parentGuiScreen;
 }

@@ -216,9 +216,7 @@ public class ModMenu extends GuiScreen {
 			btn.setWide(isWide);
 			controlList.add(btn);
 		} else if(op instanceof ModTextOption) {
-			int guiWidth = isWide ? 200 : 150;
 			TextField btn = new TextField(id, this, fontRenderer, xPos, yPos, (ModTextOption) op, gui, !worldMode);
-			btn.setWide(isWide);
 			controlList.add(btn);
 		} else if(!isWide) {
 			GuiSmallButton btn = new GuiSmallButton(id, xPos, yPos, display); 	
@@ -457,8 +455,11 @@ public class ModMenu extends GuiScreen {
 	public void changeScreen(GuiScreen screen) {
 		Keyboard.enableRepeatEvents(false);
 		saveChanges();
-		mc.displayGuiScreen(null);
-		mc.setIngameFocus();
+		mc.displayGuiScreen(screen);
+		
+		if(worldMode) {
+			mc.setIngameFocus();
+		}
 	}
 	
 	/**

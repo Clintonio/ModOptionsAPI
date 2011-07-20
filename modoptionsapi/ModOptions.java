@@ -82,19 +82,23 @@ public class ModOptions {
 	* Add a manually created option to this menu
 	*
 	* @param	option		Option selector to add
+	* @return	Returns the option just added for further operations
 	*/
-	public void addOption(ModOption option) {
+	public ModOption addOption(ModOption option) {
 		options.put(option.getName(), option);
+		return option;
 	}
 	
 	/**
 	* Add a text option with infinite max length
 	*
 	* @param	name	Name of text input
+	* @return	Returns the option just added for further operations
+	* @since	0.7
 	*/
-	public void addTextOption(String name) {
+	public ModOption addTextOption(String name) {
 		ModTextOption option = new ModTextOption(name);
-		addOption(option);
+		return addOption(option);
 	}	
 	
 	/**
@@ -103,11 +107,13 @@ public class ModOptions {
 	* 
 	* @param	name	Name of text input
 	* @param	value	Default value of input
+	* @return	Returns the option just added for further operations
+	* @since	0.7
 	*/
-	public void addTextOption(String name, String value) {
+	public ModOption addTextOption(String name, String value) {
 		ModTextOption option = new ModTextOption(name);
 		option.setGlobalValue(value);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -115,10 +121,12 @@ public class ModOptions {
 	* 
 	* @param	name	Name of text input
 	* @param	maxlen	Maximum length the user can input. 0 or less is infinite
+	* @return	Returns the option just added for further operations
+	* @since	0.7
 	*/
-	public void addTextOption(String name, int maxlen) {
+	public ModOption addTextOption(String name, int maxlen) {
 		ModTextOption option = new ModTextOption(name, maxlen);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -128,11 +136,13 @@ public class ModOptions {
 	* @param	name	Name of text input
 	* @param	value	Default value for input
 	* @param	maxlen	Maximum length the user can input. 0 or less is infinite
+	* @return	Returns the option just added for further operations
+	* @since	0.7
 	*/
-	public void addTextOption(String name, String value, int maxlen) {
+	public ModOption addTextOption(String name, String value, int maxlen) {
 		ModTextOption option = new ModTextOption(name, maxlen);
 		option.setGlobalValue(value);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -142,9 +152,27 @@ public class ModOptions {
 	* @param	name	Name of text input
 	* @param	value	Default value for input
 	* @param	maxlen	Maximum length the user can input. 0 or less is infinite
+	* @return	Returns the option just added for further operations
+	* @since	0.7
 	*/
-	public void addTextOption(String name, String value, Integer maxlen) {
-		addTextOption(name, value, (int) maxlen);
+	public ModOption addTextOption(String name, String value, Integer maxlen) {
+		return addTextOption(name, value, (int) maxlen);
+	}
+	
+	/**
+	* Adds a character binding which is unique and will not class with any
+	* other character binding. This default will not set a binding. If 
+	* a clash occurs during loading of your player's saved preferences
+	* then the later of the two mods will have their bindings undone.
+	* Please use this method and avoid setting a default vaue
+	*
+	* @param	name	Name of character binding
+	* @return	Returns the option just added for further operations
+	* @since	0.7
+	*/
+	public ModOption addKeyBinding(String name) {
+		ModKeyOption option = new ModKeyOption(name);
+		return addOption(option);
 	}
 	
 	/**
@@ -152,10 +180,11 @@ public class ModOptions {
 	*
 	* @param	name	Name of selector
 	* @param	values	Set of values to display
+	* @return	Returns the option just added for further operations
 	*/
-	public void addMultiOption(String name, String[] values) {
+	public ModOption addMultiOption(String name, String[] values) {
 		ModMultiOption option = new ModMultiOption(name, values);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -165,8 +194,9 @@ public class ModOptions {
 	* @param	name	Name of selector
 	* @param	keys	Keys for selector
 	* @param	values	Values for selector
+	* @return	Returns the option just added for further operations
 	*/
-	public void addMappedMultiOption(String name, Integer[] keys, String[] values) 
+	public ModOption addMappedMultiOption(String name, Integer[] keys, String[] values) 
 		throws IndexOutOfBoundsException {
 		if(keys.length != values.length) {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
@@ -176,7 +206,7 @@ public class ModOptions {
 				option.addValue(keys[x], values[x]);
 			}
 			
-			addOption(option);
+			return addOption(option);
 		}
 	}
 	
@@ -187,8 +217,9 @@ public class ModOptions {
 	* @param	name	Name of selector
 	* @param	keys	Keys for selector
 	* @param	values	Values for selector
+	* @return	Returns the option just added for further operations
 	*/
-	public void addMappedMultiOption(String name, int[] keys, String[] values) 
+	public ModOption addMappedMultiOption(String name, int[] keys, String[] values) 
 		throws IndexOutOfBoundsException {
 		if(keys.length != values.length) {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
@@ -198,7 +229,7 @@ public class ModOptions {
 				option.addValue(new Integer(keys[x]), values[x]);
 			}
 			
-			addOption(option);
+			return addOption(option);
 		}
 	}
 	
@@ -206,20 +237,22 @@ public class ModOptions {
 	* Add a toggle/boolean selector
 	*
 	* @param	name		Name of boolean selector
+	* @return	Returns the option just added for further operations
 	*/
-	public void addToggle(String name) {
+	public ModOption addToggle(String name) {
 		ModBooleanOption option = new ModBooleanOption(name);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	/**
 	* Add a numeric slider ranging from 0 to 100
 	*
 	* @param	name		Name of slider
+	* @return	Returns the option just added for further operations
 	*/
-	public void addSlider(String name) {
+	public ModOption addSlider(String name) {
 		ModSliderOption option = new ModSliderOption(name);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -228,10 +261,11 @@ public class ModOptions {
 	* @param	name	Name of slider
 	* @param	low		Lowest value of slider
 	* @param	high	Highest value of slider
+	* @return	Returns the option just added for further operations
 	*/
-	public void addSlider(String name, int low, int high) {
+	public ModOption addSlider(String name, int low, int high) {
 		ModSliderOption option = new ModSliderOption(name, low, high);
-		addOption(option);
+		return addOption(option);
 	}
 	
 	//=========================
@@ -390,6 +424,7 @@ public class ModOptions {
 	*
 	* @since	0.7
 	* @throws	NoSuchOptionException	When no option is present
+	* @throws	IncompatibleOptionTypeException
 	* @param	name					Name of option
 	* @return	Value of a toggle option
 	*/
@@ -399,7 +434,7 @@ public class ModOptions {
 		if(option == null) {
 			throw new NoSuchOptionException("No option named " + name);
 		} else if(!(option instanceof ModTextOption)) {
-			throw new NoSuchOptionException("Option " + name + " is not a text option");
+			throw new IncompatibleOptionTypeException("Option " + name + " is not a text option");
 		} else {
 			return ((ModTextOption) option).getValue();
 		}
@@ -410,6 +445,7 @@ public class ModOptions {
 	*
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
+	* @throws	IncompatibleOptionTypeException
 	* @param	name					Name of the option
 	* @return	Value of a toggle option
 	*/
@@ -419,7 +455,7 @@ public class ModOptions {
 		if(option == null) {
 			throw new NoSuchOptionException("No option named " + name);
 		} else if(!(option instanceof ModBooleanOption)) {
-			throw new NoSuchOptionException("Option " + name + " is not a toggle option");
+			throw new IncompatibleOptionTypeException("Option " + name + " is not a toggle option");
 		} else {
 			return ((ModBooleanOption) option).getValue();
 		}
@@ -430,6 +466,7 @@ public class ModOptions {
 	*
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
+	* @throws	IncompatibleOptionTypeException
 	* @param	name					Name of the option
 	* @return	Value of a slider option
 	*/
@@ -439,7 +476,7 @@ public class ModOptions {
 		if(option == null) {
 			throw new NoSuchOptionException("No option named " + name);
 		} else if(!(option instanceof ModSliderOption)) {
-			throw new NoSuchOptionException("Option " + name + " is not a slider option");
+			throw new IncompatibleOptionTypeException("Option " + name + " is not a slider option");
 		} else {
 			return ((ModSliderOption) option).getValue().floatValue();
 		}
@@ -450,6 +487,7 @@ public class ModOptions {
 	*
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
+	* @throws	IncompatibleOptionTypeException
 	* @param	name					Name of the option
 	* @return	Value of a mapped multi option
 	*/
@@ -459,7 +497,7 @@ public class ModOptions {
 		if(option == null) {
 			throw new NoSuchOptionException("No option named " + name);
 		} else if(!(option instanceof ModMappedMultiOption)) {
-			throw new NoSuchOptionException("Option " + name + " is not a mapped multi option");
+			throw new IncompatibleOptionTypeException("Option " + name + " is not a mapped multi option");
 		} else {
 			return ((ModMappedMultiOption) option).getValue();
 		}
@@ -469,12 +507,15 @@ public class ModOptions {
 	* Set a single named boolean options global value
 	*
 	* @throws	IncompatibleOptionTypeException
+	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of boolean toggle to change
 	* @param	value		New value of toggle
 	*/
 	public void setOptionValue(String name, boolean value) {
 		ModOption m = this.getOption(name);
-		if(m instanceof ModBooleanOption) {
+		if(m == null) {
+			throw new NoSuchOptionException();
+		} else if(m instanceof ModBooleanOption) {
 			ModBooleanOption bo = (ModBooleanOption) m;
 			bo.setGlobalValue(value);
 		} else {
@@ -486,12 +527,15 @@ public class ModOptions {
 	* Set a single slider or mapped multi option's global value
 	*
 	* @throws	IncompatibleOptionTypeException
+	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of slider option to change
 	* @param	value		New value of toggle
 	*/
 	public void setOptionValue(String name, int value) {
 		ModOption m = this.getOption(name);
-		if(m instanceof ModSliderOption) {
+		if(m == null) {
+			throw new NoSuchOptionException();
+		} else if(m instanceof ModSliderOption) {
 			ModSliderOption so = (ModSliderOption) m;
 			so.setGlobalValue(so.getFloatValue(value));
 		} else if(m instanceof ModMappedMultiOption) {
@@ -505,16 +549,54 @@ public class ModOptions {
 	* Set a single multi option's global value
 	*
 	* @throws	IncompatibleOptionTypeException
+	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of multi toggle to change
 	* @param	value		New value of toggle
 	*/
 	public void setOptionValue(String name, String value) {
 		ModOption m = this.getOption(name);
-		if(m instanceof ModMultiOption) {
+		if(m == null) {
+			throw new NoSuchOptionException();
+		} else if(m instanceof ModMultiOption) {
 			ModMultiOption mo = (ModMultiOption) m;
 			mo.setGlobalValue(value);
 		} else if(m instanceof ModTextOption) {
 			((ModTextOption) m).setGlobalValue(value);
+		} else {
+			throw new IncompatibleOptionTypeException();
+		}
+	}
+	
+	/**
+	* Set a key binding option value
+	*
+	* @throws	IncompatibleOptionTypeException
+	* @throws	KeyAlreadyBoundException
+	* @throws	NoSuchOptionException				When the option doesn't already exist
+	* @param	name	Name of option to set
+	* @param	key		Key to bind
+	*/
+	public void setOptionValue(String name, char value)
+		throws IncompatibleOptionTypeException, KeyAlreadyBoundException {
+		setOptionValue(name, new Character(value));
+	}
+	
+	/**
+	* Set a key binding option value
+	*
+	* @throws	IncompatibleOptionTypeException		When the name doesn't match option type
+	* @throws	KeyAlreadyBoundException			When the key is already bound
+	* @throws	NoSuchOptionException				When the option doesn't already exist
+	* @param	name	Name of option to set
+	* @param	key		Key to bind
+	*/
+	public void setOptionValue(String name, Character value) throws KeyAlreadyBoundException {
+		ModOption m = this.getOption(name);
+		
+		if(m == null) {
+			throw new NoSuchOptionException();
+		} else if(m instanceof ModKeyOption) {
+			((ModKeyOption) m).setValue(value);
 		} else {
 			throw new IncompatibleOptionTypeException();
 		}
@@ -681,6 +763,7 @@ public class ModOptions {
 	* @param	multi		True if  multiplayer word
 	*/
 	public void loadValues(String worldName, boolean multi) {
+		String line;
 		// Also load all children
 		for(ModOptions child : this.getSubOptions()) {
 			child.loadValues(worldName, multi);
@@ -688,13 +771,12 @@ public class ModOptions {
 		
 		File file = getFile(worldName, multi);
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			HashMap map = new HashMap<String, String>();
-			String line;
+			BufferedReader reader 	= new BufferedReader(new FileReader(file));
+			HashMap map 			= new HashMap<String, String>();
 			while((line = reader.readLine()) != null) {
-				String[] parts = line.split(":", 2);
-				String name = parts[0];
-				String value = parts[1].replace(":", "");
+				String[] 	parts 	= line.split(":", 2);
+				String 		name 	= parts[0];
+				String 		value 	= parts[1].replace(":", "");
 				map.put(name, value);
 			}
 			
@@ -702,45 +784,32 @@ public class ModOptions {
 				try {
 					// If the option is saved to the disk
 					if(map.containsKey(o.getName())) {
-						String val = (String) map.get(o.getName());
-						// Load local values if a world or server name is set
-						if(worldName.length() > 0) {
-							// Now set the local value
-							if(o instanceof ModSliderOption) {
-								ModSliderOption s = (ModSliderOption) o;
-								s.setLocalValue(Float.parseFloat(val));
-							} else if(o instanceof ModMultiOption) {
-								ModMultiOption t = (ModMultiOption) o;
-								t.setLocalValue(val);
-							} else if(o instanceof ModBooleanOption) {
-								ModBooleanOption b = (ModBooleanOption) o;
-								b.setLocalValue(Boolean.valueOf(val));
-							} else if(o instanceof ModMappedMultiOption) {
-								ModMappedMultiOption t = (ModMappedMultiOption) o;
-								t.setLocalValue(Integer.parseInt(val));
-							} else {
-								o.setLocalValue(val);
+						String 	val 	= (String) map.get(o.getName());
+						boolean global	= worldName.length() == 0;
+						
+						if(o instanceof ModSliderOption) {
+							ModSliderOption s = (ModSliderOption) o;
+							s.setValue(Float.parseFloat(val), global);
+						} else if(o instanceof ModMultiOption) {
+							ModMultiOption t = (ModMultiOption) o;
+							t.setValue(val, global);
+						} else if(o instanceof ModBooleanOption) {
+							ModBooleanOption b = (ModBooleanOption) o;
+							b.setValue(Boolean.valueOf(val), global);
+						} else if(o instanceof ModMappedMultiOption) {
+							ModMappedMultiOption t = (ModMappedMultiOption) o;
+							t.setValue(Integer.parseInt(val), global);
+						} else if(o instanceof ModKeyOption) {
+							ModKeyOption k = (ModKeyOption) o;
+							
+							if(val.length() > 0) {
+								k.setValue(val.charAt(0), global);
 							}
-							// Turn off global default for this option
-							o.setGlobal(false);
-						// Global value
 						} else {
-							if(o instanceof ModSliderOption) {
-								ModSliderOption s = (ModSliderOption) o;
-								s.setGlobalValue(Float.parseFloat(val));
-							} else if(o instanceof ModMultiOption) {
-								ModMultiOption t = (ModMultiOption) o;
-								t.setGlobalValue(val);
-							} else if(o instanceof ModBooleanOption) {
-								ModBooleanOption b = (ModBooleanOption) o;
-								b.setGlobalValue(Boolean.valueOf(val));
-							} else if(o instanceof ModMappedMultiOption) {
-								ModMappedMultiOption t = (ModMappedMultiOption) o;
-								t.setGlobalValue(Integer.parseInt(val));
-							} else {
-								o.setGlobalValue(val);
-							}
+							o.setValue(val, global);
 						}
+						// Turn off global default for this option
+						o.setGlobal(global);
 					}
 				} catch (NumberFormatException e) {
 					System.err.println("(ModOptionsAPI): Could not load option value");
@@ -760,22 +829,17 @@ public class ModOptions {
 	* @param	multiplayer		Save to a multiplayer file if true
 	*/
 	public void save(String name, boolean multiplayer) {
+		boolean global = (name.length() == 0);
 		// Delete old file, write new
 		File file = getFile(name, multiplayer);
 		file.delete();
 		try {
 			PrintWriter printwriter = new PrintWriter(new FileWriter(file));
 			for(ModOption o : this.getOptions()) {
-				Object obj; 
-				// Save the correct type of value
-				if(name.length() > 0) {
-					obj = o.getLocalValue();
-				} else {
-					obj = o.getGlobalValue();
-				}
+				Object obj = o.getValue(global);
 				
 				// Only record if it's a global value or a local non-global reference value
-				if((obj != null) && ((name.length() == 0) || (!o.useGlobalValue()))) {
+				if((obj != null) && (global || (!o.useGlobalValue()))) {
 					// Remove all ":" in the name. 
 					printwriter.println(o.getName().replace(":", "") + ":" + obj.toString());
 				}

@@ -295,6 +295,8 @@ public class ModOptionsAPI {
 			mo = parseSliderOption(name, params, mod);
 		} else if(type.equals("text")) {
 			mo = parseTextOption(name, params, mod);
+		} else if(type.equals("keybinding")) {
+			mo = parseKeyBinding(name, params, mod);
 		} else {
 			throw new IncompatibleOptionTypeException(type + " is an invalid option type in mod " + mod.getName());
 		}
@@ -377,6 +379,18 @@ public class ModOptionsAPI {
 		
 		return mo;
 	}
+	
+	/**
+	* Parse a key option into memory
+	*
+	* @param	 name	Name of option
+	* @param	params	Parameters for options
+	* @param	mod 	Mod we are parsing into
+	*/
+	private static ModOption parseKeyBinding(String name, String[] params, ModOptions mod) {
+		return new ModKeyOption(name);
+	}
+	
 	
 	/**
 	* Parses a section declaration into a mod

@@ -131,36 +131,23 @@ public class ModOptionsGuiController {
 		if((localMode) && (o.useGlobalValue())) {
 			value = "GLOBAL";
 		} else {
-			if(localMode) {
-				if(o instanceof ModSliderOption) {
-					ModSliderOption o2 = (ModSliderOption) o;
-					value = Float.toString(o2.getLocalValue());
-				} else if(o instanceof ModMappedMultiOption) {
-					ModMappedMultiOption o2 = (ModMappedMultiOption) o;
-					value = o2.getStringValue(o2.getLocalValue());
-				} else if(o instanceof ModMultiOption) {
-					value = ((ModMultiOption) o).getLocalValue();
-				} else if(o instanceof ModBooleanOption) {
-					ModBooleanOption o2 = (ModBooleanOption) o;
-					value = o2.getStringValue(o2.getLocalValue());
-				} else if(o instanceof ModTextOption) {
-					value = ((ModTextOption) o).getLocalValue();
-				}
+			if(o instanceof ModSliderOption) {
+				ModSliderOption o2 = (ModSliderOption) o;
+				value = Float.toString(o2.getValue(!localMode));
+			} else if(o instanceof ModMappedMultiOption) {
+				ModMappedMultiOption o2 = (ModMappedMultiOption) o;
+				value = o2.getStringValue(o2.getValue(!localMode));
+			} else if(o instanceof ModMultiOption) {
+				value = ((ModMultiOption) o).getValue(!localMode);
+			} else if(o instanceof ModBooleanOption) {
+				ModBooleanOption o2 = (ModBooleanOption) o;
+				value = o2.getStringValue(o2.getValue(!localMode));
+			} else if(o instanceof ModTextOption) {
+				value = ((ModTextOption) o).getValue(!localMode);
+			} else if(o instanceof ModKeyOption) {
+				value = ((ModKeyOption) o).getValue(!localMode).toString();
 			} else {
-				if(o instanceof ModSliderOption) {
-					ModSliderOption o2 = (ModSliderOption) o;
-					value = Float.toString(o2.getGlobalValue());
-				} else if(o instanceof ModMappedMultiOption) {
-					ModMappedMultiOption o2 = (ModMappedMultiOption) o;
-					value = o2.getStringValue(o2.getGlobalValue());
-				} else if(o instanceof ModMultiOption) {
-					value = ((ModMultiOption) o).getGlobalValue();
-				} else if(o instanceof ModBooleanOption) {
-					ModBooleanOption o2 = (ModBooleanOption) o;
-					value = o2.getStringValue(o2.getGlobalValue());
-				} else if(o instanceof ModTextOption) {
-					value = ((ModTextOption) o).getGlobalValue();
-				}
+				value = o.getValue(!localMode).toString();
 			}
 		}
 		

@@ -44,12 +44,28 @@ abstract public class ModOption<E> {
 	* @param	value		New value
 	*/
 	public void setValue(E value) {
-		if(!global) {
+		if(global) {
 			this.value = value;
 		} else {
 			localValue = value;
 		}
 	}
+	
+	/**
+	* Set the current value used for the given scope
+	*
+	* @param	value	New value for scope
+	* @param	scope	Scope value. True for global
+	* @since	0.7
+	*/
+	public final void setValue(E value, boolean scope) {
+		if(scope) {
+			setGlobalValue(value);
+		} else {
+			setLocalValue(value);
+		}
+	}
+	
 	
 	/**
 	* Sets the local value of this option
@@ -79,6 +95,21 @@ abstract public class ModOption<E> {
 			return value;
 		} else {
 			return localValue;
+		}
+	}
+	
+	/**
+	* Get the value of this selector from the scope
+	* given in the first parameter
+	*
+	* @param	scope	True for global value
+	* @return	Value of this option in the given scope
+	*/
+	public E getValue(boolean scope) {
+		if(global) {
+			return getGlobalValue();
+		} else {
+			return getLocalValue();
 		}
 	}
 	

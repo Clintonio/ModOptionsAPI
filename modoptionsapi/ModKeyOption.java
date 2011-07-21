@@ -1,5 +1,7 @@
 package modoptionsapi;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.KeyBinding;
@@ -22,6 +24,10 @@ public class ModKeyOption extends ModOption<Character> {
 	* fact that keys can only have one configuration per world
 	*/
 	private static Hashtable<Character, ModOption> bindings = new Hashtable<Character, ModOption>();
+	/**
+	* The default character
+	*/
+	private static Character defaultChar = new Character((char) 14);
 	
 	/**
 	* Constructor for key binding option
@@ -30,6 +36,9 @@ public class ModKeyOption extends ModOption<Character> {
 	*/
 	public ModKeyOption(String name) {
 		this.name = name;
+		
+		setGlobalValue(defaultChar);
+		setLocalValue(defaultChar);
 	}
 	/**
 	* Set the current used value of this option selector
@@ -37,7 +46,29 @@ public class ModKeyOption extends ModOption<Character> {
 	* @param	value		New value
 	*/
 	public void setValue(char value) {
-		setValue(new Character(value));
+		setValue(new Character(value), global);
+	}
+	
+	/**
+	* Set the current used value of this option selector fr a given 
+	* scope
+	* 
+	* @throws	KeyAlreadyBoundException	When attempting to remind a key
+	* @param	value		New value
+	*/
+	public void setValue(Character value) {
+		setValue(value, global);
+	}
+	
+	/**
+	* Set the current used value of this option selector for a given
+	* scope
+	* 
+	* @throws	KeyAlreadyBoundException	When attempting to remind a key
+	* @param	value		New value
+	*/
+	public void setValue(char value, boolean scope) {
+		setValue(new Character(value), scope);
 	}
 	
 	/**
@@ -46,16 +77,21 @@ public class ModKeyOption extends ModOption<Character> {
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
-	public void setValue(Character value) {
-		if((getLocalValue() == value && !global) 
+	public void setValue(Character value, boolean scope) {
+		Character curVal = getValue(scope);
+		value = Character.toUpperCase(value);
+		if(value == defaultChar) {
+			// Dead branch (CBA to refactor)
+			bindings.remove(value);
+			super.setValue(value, global);
+		} else if((getLocalValue() == value && !global) 
 				|| (getGlobalValue() == value && global) 
 				|| (!isKeyBound(value))) {
-			if(!global) {
-				this.value = value;
-			} else {
-				localValue = value;
+			// Remove old value if it exists
+			if((curVal != null) && (bindings.containsKey(curVal))) {
+				bindings.remove(curVal);
 			}
-			
+			super.setValue(value, scope);
 			bindings.put(value, this);
 		} else {
 			throw new KeyAlreadyBoundException(value);
@@ -68,16 +104,9 @@ public class ModKeyOption extends ModOption<Character> {
 	* @param	c	Character to check
 	* @return	True if already bound
 	*/
-	public boolean isKeyBound(Character c) {
-		GameSettings settings = ModLoader.getMinecraftInstance().gameSettings;
+	public static boolean isKeyBound(Character c) {
+		c = Character.toUpperCase(c);
 		
-		boolean found = false;
-		for(KeyBinding binding : settings.keyBindings) {
-			if((char) binding.keyCode == c.charValue()) {
-				found = true;
-			}
-		}
-		
-		return(found || bindings.containsKey(c));
+		return ((!c.equals(defaultChar)) && bindings.containsKey(c));
 	}
 }

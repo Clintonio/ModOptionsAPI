@@ -18,28 +18,12 @@ import modoptionsapi.ModOptionsGuiController;
 * @version	1.0.0.0
 * @since	0.7
 */
-public class TextField extends GuiButton {
-	/**
-	* Option relevant to this getText() field
-	*/
-	private ModTextOption option;
-	/**
-	* Whether to use global mode or not
-	*/
-	private boolean global;
-
-    private final FontRenderer fontRenderer;
-    private int cursorCounter;
-    public boolean isFocused;
-    private GuiScreen parentGuiScreen;
+public class TextField extends TextInputField {
 	
     public TextField(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j,
 						ModTextOption op, ModOptionsGuiController gui, boolean global) {
-		super(id, i, j, "");
-        isFocused = false;
-        enabled = true;
+		super(id, i, j, fontrenderer);
         parentGuiScreen = guiscreen;
-        fontRenderer = fontrenderer;
         xPosition = i - 50;
         yPosition = j;
         width = 300;
@@ -47,13 +31,6 @@ public class TextField extends GuiButton {
 		option = op;
 		this.global = global;
     }
-	
-	/**
-	* Get the option related to this getText() field
-	*/
-	public ModOption getOption() {
-		return option;
-	}
 
 	/**
 	* Sets the getText() for this option and button
@@ -61,16 +38,12 @@ public class TextField extends GuiButton {
 	* @param	s		New string to display and use for option value
 	*/
     protected void setText(String s) {
-		int maxlen = option.getMaxLength();
+		int maxlen = ((ModTextOption) option).getMaxLength();
 		if((s.length() > maxlen) && (maxlen > 0)) {
 			s = s.substring(0, maxlen - 1);
 		}
 		
-		if(global) {
-			option.setGlobalValue(s);
-		} else {
-			option.setLocalValue(s);
-		}
+		((ModTextOption) option).setValue(s, global);
 	}
 	
 	/**
@@ -79,23 +52,16 @@ public class TextField extends GuiButton {
 	* @return 	Current getText() value
 	*/
     public String getText() {
-		if(global) {
-			return option.getGlobalValue();
-		} else {
-			return option.getLocalValue();
-		}
-    }
-
-    public void updateCursorCounter() {
-        cursorCounter++;
+		return ((ModTextOption) option).getValue(global);
     }
 
     public void textboxKeyTyped(char c, int i) {
 		String 	text = getText();
 		String 	s 	= GuiScreen.getClipboardString();
+		int 	max = ((ModTextOption) option).getMaxLength();
 		int 	j;
 		
-        if(enabled && isFocused) {
+        if(enabled && isFocused()) {
 			if(c == '\t') {
 				parentGuiScreen.selectNextField();
 			} else if(c == '\026') {
@@ -112,20 +78,12 @@ public class TextField extends GuiButton {
 			} else if(i == 14 && text.length() > 0) {
 				text = text.substring(0, text.length() - 1);
 			} else if(ChatAllowedCharacters.allowedCharacters.indexOf(c) >= 0 && 
-				(text.length() < option.getMaxLength() 
-				|| option.getMaxLength() == 0)) {
+				((text.length() < max) || (max == 0))) {
 				text += c;
 			}
 			
 			setText(text);
 		}
-    }
-
-    public void setFocused(boolean flag) {
-        if(flag && !isFocused) {
-            cursorCounter = 0;
-        }
-        isFocused = flag;
     }
 
 	/**
@@ -135,7 +93,7 @@ public class TextField extends GuiButton {
 		String 	text		= getText();
 		String	name		= option.getName();
 		
-		int 	maxlen		= option.getMaxLength();
+		int 	maxlen		= ((ModTextOption) option).getMaxLength();
 		int 	len			= text.length();
 		int		padding		= 30;
 		
@@ -165,7 +123,7 @@ public class TextField extends GuiButton {
         drawRect(xPosition, yPosition, xPosition + width, yPosition + height, 0xff000000);
         if(enabled) {
 			drawString(fontRenderer, option.getName(), xPosition + 4, yPosition + (height - 8) / 2, 0x707070);
-            boolean flag = isFocused && (cursorCounter / 6) % 2 == 0;
+            boolean flag = isFocused() && (getCursorCounter() / 6) % 2 == 0;
 			
             drawString(fontRenderer, (new StringBuilder()).append(text).append(flag ? "_" : "").toString(), 
 					   xPosition + nameWidth + 10, yPosition + (height - 8) / 2, 0xe0e0e0);

@@ -176,6 +176,22 @@ public class ModOptions {
 	}
 	
 	/**
+	* Adds a character binding which is unique and will not class with any
+	* other character binding. This default will not set a binding. If 
+	* a clash occurs during loading of your player's saved preferences
+	* then the later of the two mods will have their bindings undone.
+	* Please use this method and avoid setting a default vaue
+	*
+	* @param	name	Name of character binding
+	* @return	Returns the option just added for further operations
+	* @since	0.7
+	*/
+	public ModOption addKeyOption(String name) {
+		ModKeyOption option = new ModKeyOption(name);
+		return addOption(option);
+	}
+	
+	/**
 	* Add a multiple selector
 	*
 	* @param	name	Name of selector
@@ -803,7 +819,14 @@ public class ModOptions {
 							ModKeyOption k = (ModKeyOption) o;
 							
 							if(val.length() > 0) {
-								k.setValue(val.charAt(0), global);
+								try {
+									k.setValue(val.charAt(0), global);
+								} catch (KeyAlreadyBoundException e) {
+									// We have to give up attempting to assign
+									// and just print a message
+									System.out.println("(MOAPI) Key + " + val.charAt(0) + 
+										" already bound, please rebind in options");
+								}
 							}
 						} else {
 							o.setValue(val, global);

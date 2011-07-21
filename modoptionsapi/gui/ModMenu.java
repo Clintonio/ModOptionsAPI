@@ -216,14 +216,18 @@ public class ModMenu extends GuiScreen {
 			btn.setWide(isWide);
 			controlList.add(btn);
 		} else if(op instanceof ModTextOption) {
-			TextField btn = new TextField(id, this, fontRenderer, xPos, yPos, (ModTextOption) op, gui, !worldMode);
+			controlList.add(new TextField(id, this, fontRenderer, xPos, yPos, 
+						   (ModTextOption) op, gui, !worldMode));
+		} else if(op instanceof ModKeyOption) {
+			KeyBindingField btn = new KeyBindingField(id, this, fontRenderer, xPos, yPos,
+								  (ModKeyOption) op, gui, !worldMode);	
 			controlList.add(btn);
+			
+			btn.setWide(isWide);
 		} else if(!isWide) {
-			GuiSmallButton btn = new GuiSmallButton(id, xPos, yPos, display); 	
-			controlList.add(btn);
+			controlList.add(new GuiSmallButton(id, xPos, yPos, display));
 		} else {
-			GuiButton btn = new GuiButton(id, xPos, yPos, display);
-			controlList.add(btn);
+			controlList.add(new GuiButton(id, xPos, yPos, display));
 		}
 	}
 	
@@ -330,8 +334,8 @@ public class ModMenu extends GuiScreen {
     protected void keyTyped(char c, int i) {
         if(i == 1) {
 			changeScreen(null);
-        } else if(curButton instanceof TextField) {
-			handleTextAction((TextField) curButton, c, i);
+        } else if(curButton instanceof TextInputField) {
+			handleTextAction((TextInputField) curButton, c, i);
 		}
     }
 	
@@ -342,7 +346,7 @@ public class ModMenu extends GuiScreen {
 	* @param	c		Character input
 	* @param	i		Integer value of input
 	*/
-	private void handleTextAction(TextField txt, char c, int i) {
+	private void handleTextAction(TextInputField txt, char c, int i) {
 		txt.textboxKeyTyped(c, i);
 	}
 		
@@ -424,7 +428,7 @@ public class ModMenu extends GuiScreen {
     protected void mouseMovedOrUp(int i, int j, int k) {
 		// Text fields need constant focus, so do not set curbutton to null
 		// when a textbox is focused
-		if(!(curButton instanceof TextField) && curButton != null
+		if(!(curButton instanceof TextInputField) && curButton != null
 				 && k == 0) {
             curButton.mouseReleased(i, j);
             curButton = null;
@@ -483,14 +487,14 @@ public class ModMenu extends GuiScreen {
 	* @param	btn		Button
 	*/
 	private void setCurrentButton(GuiButton btn) {
-		if(curButton instanceof TextField) {
-			((TextField) curButton).setFocused(false);
+		if(curButton instanceof TextInputField) {
+			((TextInputField) curButton).setFocused(false);
 		}
 		
 		curButton = btn;
 		
-		if(curButton instanceof TextField) {
-			((TextField) curButton).setFocused(true);
+		if(curButton instanceof TextInputField) {
+			((TextInputField) curButton).setFocused(true);
 		}
 		
 		if(curButton != null) {
@@ -769,8 +773,6 @@ public class ModMenu extends GuiScreen {
 			btn.displayString = optionPressed((ModMappedMultiOption) option);
 		} else if(btn instanceof Slider) {
 			((Slider) btn).updateDisplayString();
-		} else if(option instanceof ModTextOption) {
-			// Ignore
 		}
 	}
 	

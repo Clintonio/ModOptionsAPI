@@ -58,14 +58,13 @@ abstract public class ModOption<E> {
 	* @param	scope	Scope value. True for global
 	* @since	0.7
 	*/
-	public final void setValue(E value, boolean scope) {
+	public void setValue(E value, boolean scope) {
 		if(scope) {
-			setGlobalValue(value);
+			this.value = value;
 		} else {
-			setLocalValue(value);
+			localValue = value;
 		}
 	}
-	
 	
 	/**
 	* Sets the local value of this option
@@ -73,7 +72,7 @@ abstract public class ModOption<E> {
 	* @param	value		New value
 	*/
 	public void setLocalValue(E value) {
-		localValue = value;
+		setValue(value, false);
 	}
 	
 	/**
@@ -82,7 +81,7 @@ abstract public class ModOption<E> {
 	* @param	value		New value
 	*/
 	public void setGlobalValue(E value) {
-		this.value = value;
+		setValue(value, true);
 	}
 	
 	/**

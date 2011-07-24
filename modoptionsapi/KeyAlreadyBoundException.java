@@ -8,7 +8,7 @@ package modoptionsapi;
 * @since	0.7
 */
 public class KeyAlreadyBoundException extends IllegalStateException {
-	public KeyAlreadyBoundException(Character key) {
-		super("Key " + key + " is already bound");
+	public KeyAlreadyBoundException(Integer key) {
+		super("Key " + ModKeyOption.getKeyName(key) + " is already bound");
 	}
 }

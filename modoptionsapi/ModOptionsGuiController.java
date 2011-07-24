@@ -145,7 +145,7 @@ public class ModOptionsGuiController {
 			} else if(o instanceof ModTextOption) {
 				value = ((ModTextOption) o).getValue(!localMode);
 			} else if(o instanceof ModKeyOption) {
-				value = ((ModKeyOption) o).getValue(!localMode).toString();
+				value = ModKeyOption.getKeyName(((ModKeyOption) o).getValue(!localMode));
 			} else {
 				value = o.getValue(!localMode).toString();
 			}
@@ -154,9 +154,16 @@ public class ModOptionsGuiController {
 		// If it has no formatters or is using a global value then show
 		// a label: Value format
 		if((!formatters.containsKey(o)) || ((localMode) && (o.useGlobalValue()))) {
-			// Select a default object
-			MODisplayString s = MOFormatters.defaultFormat;
-			return s.manipulate(o.getName(), value);
+			// Use different default for a key option
+			if(o instanceof ModKeyOption) {
+				MODisplayString s = MOFormatters.noFormat;
+				
+				return s.manipulate(o.getName(), value);
+			} else {
+				// Select a default object
+				MODisplayString s = MOFormatters.defaultFormat;
+				return s.manipulate(o.getName(), value);
+			}
 		} else {
 			for(MODisplayString s : formatters.get(o)) {
 				value = s.manipulate(o.getName(), value);

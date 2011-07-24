@@ -18,16 +18,16 @@ import java.util.prefs.InvalidPreferencesFormatException;
 * @version	1.0.0.0
 * @since 	0.7
 */
-public class ModKeyOption extends ModOption<Character> {
+public class ModKeyOption extends ModOption<Integer> {
 	/**
 	* Current key bindings, implemented as a single value due to the
 	* fact that keys can only have one configuration per world
 	*/
-	private static Hashtable<Character, ModOption> bindings = new Hashtable<Character, ModOption>();
+	private static Hashtable<Integer, ModOption> bindings = new Hashtable<Integer, ModOption>();
 	/**
-	* The default character
+	* The default Integer
 	*/
-	private static Character defaultChar = new Character((char) 14);
+	public static final Integer defaultVal = Keyboard.KEY_NONE;
 	
 	/**
 	* Constructor for key binding option
@@ -37,16 +37,16 @@ public class ModKeyOption extends ModOption<Character> {
 	public ModKeyOption(String name) {
 		this.name = name;
 		
-		setGlobalValue(defaultChar);
-		setLocalValue(defaultChar);
+		setValue(defaultVal, true);
+		setValue(defaultVal, false);
 	}
 	/**
 	* Set the current used value of this option selector
 	* 
 	* @param	value		New value
 	*/
-	public void setValue(char value) {
-		setValue(new Character(value), global);
+	public void setValue(int value) {
+		setValue(new Integer(value), global);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class ModKeyOption extends ModOption<Character> {
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
-	public void setValue(Character value) {
+	public void setValue(Integer value) {
 		setValue(value, global);
 	}
 	
@@ -67,8 +67,8 @@ public class ModKeyOption extends ModOption<Character> {
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
-	public void setValue(char value, boolean scope) {
-		setValue(new Character(value), scope);
+	public void setValue(int value, boolean scope) {
+		setValue(new Integer(value), scope);
 	}
 	
 	/**
@@ -77,10 +77,9 @@ public class ModKeyOption extends ModOption<Character> {
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
-	public void setValue(Character value, boolean scope) {
-		Character curVal = getValue(scope);
-		value = Character.toUpperCase(value);
-		if(value == defaultChar) {
+	public void setValue(Integer value, boolean scope) {
+		Integer curVal = getValue(scope);
+		if(value == defaultVal) {
 			// Dead branch (CBA to refactor)
 			bindings.remove(value);
 			super.setValue(value, global);
@@ -101,12 +100,26 @@ public class ModKeyOption extends ModOption<Character> {
 	/**
 	* Check if a key is already bound
 	*
-	* @param	c	Character to check
+	* @param	c	Integer to check
 	* @return	True if already bound
 	*/
-	public static boolean isKeyBound(Character c) {
-		c = Character.toUpperCase(c);
+	public static boolean isKeyBound(Integer c) {
+		return ((!c.equals(defaultVal)) && bindings.containsKey(c));
+	}
+	
+	/**
+	* Get a name of a key. "INVALID" for no value
+	*
+	* @param	key		Key to get value for
+	* @return	String for key
+	*/
+	public static String getKeyName(Integer key) {
+		String val = Keyboard.getKeyName(key);
 		
-		return ((!c.equals(defaultChar)) && bindings.containsKey(c));
+		if(val == null) {
+			return "INVALID";
+		} else {
+			return val;
+		}
 	}
 }

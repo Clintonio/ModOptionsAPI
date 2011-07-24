@@ -22,7 +22,7 @@ public class TextField extends TextInputField {
 	
     public TextField(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j,
 						ModTextOption op, ModOptionsGuiController gui, boolean global) {
-		super(id, i, j, fontrenderer);
+		super(id, i, j, fontrenderer, gui);
         parentGuiScreen = guiscreen;
         xPosition = i - 50;
         yPosition = j;

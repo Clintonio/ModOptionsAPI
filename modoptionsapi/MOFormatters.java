@@ -4,7 +4,7 @@ package modoptionsapi;
 * Container class for formatters
 *
 * @author 	Clinton Alexander
-* @version	1.0
+* @version	1.1
 * @since	0.3
 */
 public class MOFormatters {
@@ -18,6 +18,12 @@ public class MOFormatters {
 	* @since	0.6.1
 	*/
 	public final static IntegerSliderFormat integerSlider = new MOFormatters.IntegerSliderFormat();
+	/**
+	* Formatter for an option that only displays the option value
+	*
+	* @since	0.7
+	*/
+	public final static NoFormat noFormat = new MOFormatters.NoFormat();
 	
 	/**
 	* Default manipulation class
@@ -32,6 +38,25 @@ public class MOFormatters {
 		*/
 		public String manipulate(String name, String value) {
 			return name + ": " + value;
+		}
+	}
+	
+	/**
+	* A formatted with no format, which outputs just the text given.
+	* 
+	* @author	Clinton Alexander
+	* @version	1.0
+	* @since	0.7
+	*/
+	private static final class NoFormat implements MODisplayString {
+		/**
+		* Simply return the value
+		*
+		* @since	0.7
+		* @return	Same value as input
+		*/
+		public String manipulate(String name, String value) {
+			return value;
 		}
 	}
 	

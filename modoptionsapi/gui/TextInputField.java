@@ -6,6 +6,7 @@ import net.minecraft.src.FontRenderer;
 import net.minecraft.client.Minecraft;
 
 import modoptionsapi.ModOption;
+import modoptionsapi.ModOptionsGuiController;
 
 /**
 * A part of the inheritance chain for buttons
@@ -40,12 +41,17 @@ public abstract class TextInputField extends GuiButton {
 	* For allowing cursor to blink
 	*/
     private int cursorCounter;
+	/**
+	* The GUI for controlling MOAPI output
+	*/
+	protected ModOptionsGuiController gui;
 
 	/**
 	* To interface child with parent
 	*/
-    public TextInputField(int i, int j, int k, FontRenderer r) {
+    public TextInputField(int i, int j, int k, FontRenderer r, ModOptionsGuiController gui) {
 		super(i, j, k, "");
+		this.gui		= gui;
 		enabled 		= true;
 		fontRenderer 	= r;
 	}

@@ -27,7 +27,7 @@ public class KeyBindingField extends TextInputField {
 	
     public KeyBindingField(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j,
 						ModKeyOption op, ModOptionsGuiController gui, boolean global) {
-		super(id, i, j, fontrenderer);
+		super(id, i, j, fontrenderer, gui);
         enabled 	= true;
         parentGuiScreen = guiscreen;
         xPosition 	= i;
@@ -52,7 +52,7 @@ public class KeyBindingField extends TextInputField {
 	*
 	* @param	c	Character to set
 	*/
-	private void setChar(char c) {
+	private void setKey(Integer c) {
 		((ModKeyOption) option).setValue(c, global);
 	}
 	
@@ -61,8 +61,8 @@ public class KeyBindingField extends TextInputField {
 	*
 	* @return	Character for this field
 	*/
-	private char getChar() {
-		return (char) ((ModKeyOption) option).getValue(global);
+	private Integer getKey() {
+		return ((ModKeyOption) option).getValue(global);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class KeyBindingField extends TextInputField {
 	* @param	i	Integer representation of c
 	*/
     public void textboxKeyTyped(char c, int i) {
-		int 	j;
+		Integer val = new Integer(i);
 		
         if(enabled && isFocused()) {
 			// Tab
@@ -81,10 +81,10 @@ public class KeyBindingField extends TextInputField {
 			// Paste
 			} else if(c == '\026') {
 			// Enter a char
-			} else if(!ModKeyOption.isKeyBound(c)) {
-				setChar(c);
+			} else if(!ModKeyOption.isKeyBound(val)) {
+				setKey(val);
 				setFocused(false);
-			} else if(c == ((ModKeyOption) option).getValue(global)) {
+			} else if(val == ((ModKeyOption) option).getValue(global)) {
 				setFocused(false);
 			}
 		}
@@ -94,12 +94,14 @@ public class KeyBindingField extends TextInputField {
 	* Draw a textarea with a label inside and an editable text space
 	*/
     public void drawButton(Minecraft minecraft, int i, int j) {
-		char 	text		= getChar();
+		Integer	key			= getKey();
+		String 	text		= gui.getDisplayString(option, !global);
 		String	name		= option.getName();
 		int		nameWidth 	= wide ? parentGuiScreen.width / 2 - width : parentGuiScreen.width - width;
+		boolean blink		= (getCursorCounter() / 6) % 2 == 0;
 		
-		if(!isFocused()) {
-			displayString = "" + text;
+		if((!isFocused()) || (blink)) {
+			displayString = text;
 		} else {
 			displayString = "> " + text + " <";
 		}

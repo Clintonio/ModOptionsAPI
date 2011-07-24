@@ -542,23 +542,37 @@ public class ModOptions {
 	/**
 	* Set a single slider or mapped multi option's global value
 	*
+	* @since	0.7
+	* @throws	IncompatibleOptionTypeException
+	* @throws	NoSuchOptionException				When the option doesn't already exist
+	* @param	name		Name of slider option to change
+	* @param	value		New value of toggle
+	*/
+	public void setOptionValue(String name, Integer value) {
+		ModOption m = this.getOption(name);
+		if(m == null) {
+			throw new NoSuchOptionException();
+		} else if(m instanceof ModSliderOption) {
+			((ModSliderOption) m).setGlobalValue(value);
+		} else if(m instanceof ModMappedMultiOption) {
+			((ModMappedMultiOption) m).setGlobalValue(value);
+		} else if(m instanceof ModKeyOption) {
+			((ModKeyOption) m).setGlobalValue(value);
+		} else {
+			throw new IncompatibleOptionTypeException();
+		}
+	}
+	
+	/**
+	* Set a single slider or mapped multi option's global value
+	*
 	* @throws	IncompatibleOptionTypeException
 	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of slider option to change
 	* @param	value		New value of toggle
 	*/
 	public void setOptionValue(String name, int value) {
-		ModOption m = this.getOption(name);
-		if(m == null) {
-			throw new NoSuchOptionException();
-		} else if(m instanceof ModSliderOption) {
-			ModSliderOption so = (ModSliderOption) m;
-			so.setGlobalValue(so.getFloatValue(value));
-		} else if(m instanceof ModMappedMultiOption) {
-			((ModMappedMultiOption) m).setGlobalValue(value);
-		} else {
-			throw new IncompatibleOptionTypeException();
-		}
+		setOptionValue(name, new Integer(value));
 	}
 	
 	/**
@@ -578,41 +592,6 @@ public class ModOptions {
 			mo.setGlobalValue(value);
 		} else if(m instanceof ModTextOption) {
 			((ModTextOption) m).setGlobalValue(value);
-		} else {
-			throw new IncompatibleOptionTypeException();
-		}
-	}
-	
-	/**
-	* Set a key binding option value
-	*
-	* @throws	IncompatibleOptionTypeException
-	* @throws	KeyAlreadyBoundException
-	* @throws	NoSuchOptionException				When the option doesn't already exist
-	* @param	name	Name of option to set
-	* @param	key		Key to bind
-	*/
-	public void setOptionValue(String name, char value)
-		throws IncompatibleOptionTypeException, KeyAlreadyBoundException {
-		setOptionValue(name, new Character(value));
-	}
-	
-	/**
-	* Set a key binding option value
-	*
-	* @throws	IncompatibleOptionTypeException		When the name doesn't match option type
-	* @throws	KeyAlreadyBoundException			When the key is already bound
-	* @throws	NoSuchOptionException				When the option doesn't already exist
-	* @param	name	Name of option to set
-	* @param	key		Key to bind
-	*/
-	public void setOptionValue(String name, Character value) throws KeyAlreadyBoundException {
-		ModOption m = this.getOption(name);
-		
-		if(m == null) {
-			throw new NoSuchOptionException();
-		} else if(m instanceof ModKeyOption) {
-			((ModKeyOption) m).setValue(value);
 		} else {
 			throw new IncompatibleOptionTypeException();
 		}
@@ -801,7 +780,7 @@ public class ModOptions {
 					// If the option is saved to the disk
 					if(map.containsKey(o.getName())) {
 						String 	val 	= (String) map.get(o.getName());
-						boolean global	= worldName.length() == 0;
+						boolean global	= (worldName.length() == 0);
 						
 						if(o instanceof ModSliderOption) {
 							ModSliderOption s = (ModSliderOption) o;
@@ -816,11 +795,12 @@ public class ModOptions {
 							ModMappedMultiOption t = (ModMappedMultiOption) o;
 							t.setValue(Integer.parseInt(val), global);
 						} else if(o instanceof ModKeyOption) {
-							ModKeyOption k = (ModKeyOption) o;
+							ModKeyOption k 	= (ModKeyOption) o;
+							Integer key 	= Integer.parseInt(val);
 							
-							if(val.length() > 0) {
+							if(key != ModKeyOption.defaultVal) {
 								try {
-									k.setValue(val.charAt(0), global);
+									k.setValue(key, global);
 								} catch (KeyAlreadyBoundException e) {
 									// We have to give up attempting to assign
 									// and just print a message

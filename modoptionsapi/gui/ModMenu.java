@@ -297,6 +297,7 @@ public class ModMenu extends GuiScreen {
 	* @param	k	1 for right click, 0 for left
 	*/
     protected void mouseClicked(int i, int j, int k) {
+		setCurrentButton(null);
 		// left click
 		if(k == 0) {
 			if((i > getSliderLeft()) && (i < getSliderRight()) 
@@ -322,6 +323,7 @@ public class ModMenu extends GuiScreen {
 				if(buttonPressed(guibutton, i, j, true)) {
 					altActionPerformed(guibutton);
                     mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+					setCurrentButton(guibutton);
 				}
 			}
 		}
@@ -445,8 +447,8 @@ public class ModMenu extends GuiScreen {
 		
 		// Update all text field cursor blinking
 		for(Object obj : controlList) {
-			if(obj instanceof TextField) {
-				((TextField) obj).updateCursorCounter();
+			if(obj instanceof TextInputField) {
+				((TextInputField) obj).updateCursorCounter();
 			}
 		}
 	}

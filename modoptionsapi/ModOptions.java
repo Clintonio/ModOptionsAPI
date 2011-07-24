@@ -84,7 +84,15 @@ public class ModOptions {
 	* @param	option		Option selector to add
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addOption(ModOption option) {
+	public void addOption(ModOption option) {
+		options.put(option.getName(), option);
+		//return option;
+	}
+	
+	/**
+	* Temporary stopgap between this version and 0.8
+	*/
+	private ModOption addNewOption(ModOption option) {
 		options.put(option.getName(), option);
 		return option;
 	}
@@ -98,7 +106,7 @@ public class ModOptions {
 	*/
 	public ModOption addTextOption(String name) {
 		ModTextOption option = new ModTextOption(name);
-		return addOption(option);
+		return addNewOption(option);
 	}	
 	
 	/**
@@ -113,7 +121,7 @@ public class ModOptions {
 	public ModOption addTextOption(String name, String value) {
 		ModTextOption option = new ModTextOption(name);
 		option.setGlobalValue(value);
-		return addOption(option);
+		return addNewOption(option);
 	}
 	
 	/**
@@ -126,7 +134,7 @@ public class ModOptions {
 	*/
 	public ModOption addTextOption(String name, int maxlen) {
 		ModTextOption option = new ModTextOption(name, maxlen);
-		return addOption(option);
+		return addNewOption(option);
 	}
 	
 	/**
@@ -142,7 +150,7 @@ public class ModOptions {
 	public ModOption addTextOption(String name, String value, int maxlen) {
 		ModTextOption option = new ModTextOption(name, maxlen);
 		option.setGlobalValue(value);
-		return addOption(option);
+		return addNewOption(option);
 	}
 	
 	/**
@@ -172,7 +180,7 @@ public class ModOptions {
 	*/
 	public ModOption addKeyBinding(String name) {
 		ModKeyOption option = new ModKeyOption(name);
-		return addOption(option);
+		return addNewOption(option);
 	}
 	
 	/**
@@ -188,7 +196,7 @@ public class ModOptions {
 	*/
 	public ModOption addKeyOption(String name) {
 		ModKeyOption option = new ModKeyOption(name);
-		return addOption(option);
+		return addNewOption(option);
 	}
 	
 	/**
@@ -198,9 +206,9 @@ public class ModOptions {
 	* @param	values	Set of values to display
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addMultiOption(String name, String[] values) {
+	public void addMultiOption(String name, String[] values) {
 		ModMultiOption option = new ModMultiOption(name, values);
-		return addOption(option);
+		/*return*/ addOption(option);
 	}
 	
 	/**
@@ -212,7 +220,7 @@ public class ModOptions {
 	* @param	values	Values for selector
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addMappedMultiOption(String name, Integer[] keys, String[] values) 
+	public void addMappedMultiOption(String name, Integer[] keys, String[] values) 
 		throws IndexOutOfBoundsException {
 		if(keys.length != values.length) {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
@@ -222,7 +230,7 @@ public class ModOptions {
 				option.addValue(keys[x], values[x]);
 			}
 			
-			return addOption(option);
+			/*return*/ addOption(option);
 		}
 	}
 	
@@ -235,7 +243,7 @@ public class ModOptions {
 	* @param	values	Values for selector
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addMappedMultiOption(String name, int[] keys, String[] values) 
+	public void addMappedMultiOption(String name, int[] keys, String[] values) 
 		throws IndexOutOfBoundsException {
 		if(keys.length != values.length) {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
@@ -245,7 +253,7 @@ public class ModOptions {
 				option.addValue(new Integer(keys[x]), values[x]);
 			}
 			
-			return addOption(option);
+			/*return*/ addOption(option);
 		}
 	}
 	
@@ -255,9 +263,9 @@ public class ModOptions {
 	* @param	name		Name of boolean selector
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addToggle(String name) {
+	public void addToggle(String name) {
 		ModBooleanOption option = new ModBooleanOption(name);
-		return addOption(option);
+		/*return*/ addOption(option);
 	}
 	
 	/**
@@ -266,9 +274,9 @@ public class ModOptions {
 	* @param	name		Name of slider
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addSlider(String name) {
+	public void addSlider(String name) {
 		ModSliderOption option = new ModSliderOption(name);
-		return addOption(option);
+		/*return*/ addOption(option);
 	}
 	
 	/**
@@ -279,9 +287,9 @@ public class ModOptions {
 	* @param	high	Highest value of slider
 	* @return	Returns the option just added for further operations
 	*/
-	public ModOption addSlider(String name, int low, int high) {
+	public void addSlider(String name, int low, int high) {
 		ModSliderOption option = new ModSliderOption(name, low, high);
-		return addOption(option);
+		/*return*/ addOption(option);
 	}
 	
 	//=========================

@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * Provides an interface to create a simple bounded slider

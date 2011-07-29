@@ -1,4 +1,4 @@
-package modoptionsapi.gui;
+package moapi.gui;
 
 import net.minecraft.src.ChatAllowedCharacters;
 import net.minecraft.src.FontRenderer;
@@ -7,9 +7,9 @@ import net.minecraft.src.GuiScreen;
 
 import net.minecraft.client.Minecraft;
 
-import modoptionsapi.ModOption;
-import modoptionsapi.ModKeyOption;
-import modoptionsapi.ModOptionsGuiController;
+import moapi.ModOption;
+import moapi.ModKeyOption;
+import moapi.ModOptionsGuiController;
 
 /**
 * GUI for getText() field within MOAPI

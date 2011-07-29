@@ -1,4 +1,8 @@
-package modoptionsapi;
+package moapi;
+
+import moapi.gui.DisplayStringFormatter;
+import moapi.gui.GuiController;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Set;
@@ -17,7 +21,7 @@ import net.minecraft.client.Minecraft;
 * An abstract representation of a set of options for a single mod
 *
 * @author	Clinton Alexander
-* @version	0.1	
+* @version	1.0
 * @since	0.1
 */
 public class ModOptions {
@@ -32,7 +36,7 @@ public class ModOptions {
 	/**
 	* Display details
 	*/
-	private ModOptionsGuiController gui = new ModOptionsGuiController(this);
+	private static final GuiController gui = new GuiController();
 	
 	/**
 	* Name of this menu
@@ -70,8 +74,8 @@ public class ModOptions {
 	* @param	p		Parent of this option list
 	*/
 	public ModOptions(String name, ModOptions p) {
-		this.name = name;
-		parent = p;
+		this.name 	= name;
+		parent 		= p;
 	}
 	
 	//=========================
@@ -84,15 +88,7 @@ public class ModOptions {
 	* @param	option		Option selector to add
 	* @return	Returns the option just added for further operations
 	*/
-	public void addOption(ModOption option) {
-		options.put(option.getName(), option);
-		//return option;
-	}
-	
-	/**
-	* Temporary stopgap between this version and 0.8
-	*/
-	private ModOption addNewOption(ModOption option) {
+	public ModOption addOption(ModOption option) {
 		options.put(option.getName(), option);
 		return option;
 	}
@@ -206,9 +202,9 @@ public class ModOptions {
 	* @param	values	Set of values to display
 	* @return	Returns the option just added for further operations
 	*/
-	public void addMultiOption(String name, String[] values) {
+	public ModOption addMultiOption(String name, String[] values) {
 		ModMultiOption option = new ModMultiOption(name, values);
-		/*return*/ addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -220,7 +216,7 @@ public class ModOptions {
 	* @param	values	Values for selector
 	* @return	Returns the option just added for further operations
 	*/
-	public void addMappedMultiOption(String name, Integer[] keys, String[] values) 
+	public ModOption addMappedMultiOption(String name, Integer[] keys, String[] values) 
 		throws IndexOutOfBoundsException {
 		if(keys.length != values.length) {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
@@ -230,7 +226,7 @@ public class ModOptions {
 				option.addValue(keys[x], values[x]);
 			}
 			
-			/*return*/ addOption(option);
+			return addOption(option);
 		}
 	}
 	
@@ -243,7 +239,7 @@ public class ModOptions {
 	* @param	values	Values for selector
 	* @return	Returns the option just added for further operations
 	*/
-	public void addMappedMultiOption(String name, int[] keys, String[] values) 
+	public ModOption addMappedMultiOption(String name, int[] keys, String[] values) 
 		throws IndexOutOfBoundsException {
 		if(keys.length != values.length) {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
@@ -253,7 +249,7 @@ public class ModOptions {
 				option.addValue(new Integer(keys[x]), values[x]);
 			}
 			
-			/*return*/ addOption(option);
+			return addOption(option);
 		}
 	}
 	
@@ -263,9 +259,9 @@ public class ModOptions {
 	* @param	name		Name of boolean selector
 	* @return	Returns the option just added for further operations
 	*/
-	public void addToggle(String name) {
+	public ModOption addToggle(String name) {
 		ModBooleanOption option = new ModBooleanOption(name);
-		/*return*/ addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -274,9 +270,9 @@ public class ModOptions {
 	* @param	name		Name of slider
 	* @return	Returns the option just added for further operations
 	*/
-	public void addSlider(String name) {
+	public ModOption addSlider(String name) {
 		ModSliderOption option = new ModSliderOption(name);
-		/*return*/ addOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -287,9 +283,9 @@ public class ModOptions {
 	* @param	high	Highest value of slider
 	* @return	Returns the option just added for further operations
 	*/
-	public void addSlider(String name, int low, int high) {
+	public ModOption addSlider(String name, int low, int high) {
 		ModSliderOption option = new ModSliderOption(name, low, high);
-		/*return*/ addOption(option);
+		return addOption(option);
 	}
 	
 	//=========================
@@ -300,10 +296,13 @@ public class ModOptions {
 	* Add a sub menu of options
 	*
 	* @param	m		Set of sub-options
+	* @return	The current object, for building
 	*/
-	public void addSubOptions(ModOptions m) {
+	public ModOptions addSubOptions(ModOptions m) {
 		m.setParent(this);
 		subOptions.put(m.getName(), m);
+		
+		return this;
 	}
 	
 	/**
@@ -534,8 +533,9 @@ public class ModOptions {
 	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of boolean toggle to change
 	* @param	value		New value of toggle
+	* @return	This object for building
 	*/
-	public void setOptionValue(String name, boolean value) {
+	public ModOptions setOptionValue(String name, boolean value) {
 		ModOption m = this.getOption(name);
 		if(m == null) {
 			throw new NoSuchOptionException();
@@ -545,6 +545,8 @@ public class ModOptions {
 		} else {
 			throw new IncompatibleOptionTypeException();
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -555,8 +557,9 @@ public class ModOptions {
 	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of slider option to change
 	* @param	value		New value of toggle
+	* @return	This object for building
 	*/
-	public void setOptionValue(String name, Integer value) {
+	public ModOptions setOptionValue(String name, Integer value) {
 		ModOption m = this.getOption(name);
 		if(m == null) {
 			throw new NoSuchOptionException();
@@ -569,6 +572,8 @@ public class ModOptions {
 		} else {
 			throw new IncompatibleOptionTypeException();
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -578,9 +583,10 @@ public class ModOptions {
 	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of slider option to change
 	* @param	value		New value of toggle
+	* @return	This object for building
 	*/
-	public void setOptionValue(String name, int value) {
-		setOptionValue(name, new Integer(value));
+	public ModOptions setOptionValue(String name, int value) {
+		return setOptionValue(name, new Integer(value));
 	}
 	
 	/**
@@ -590,8 +596,9 @@ public class ModOptions {
 	* @throws	NoSuchOptionException				When the option doesn't already exist
 	* @param	name		Name of multi toggle to change
 	* @param	value		New value of toggle
+	* @return	This object for building
 	*/
-	public void setOptionValue(String name, String value) {
+	public ModOptions setOptionValue(String name, String value) {
 		ModOption m = this.getOption(name);
 		if(m == null) {
 			throw new NoSuchOptionException();
@@ -603,6 +610,8 @@ public class ModOptions {
 		} else {
 			throw new IncompatibleOptionTypeException();
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -630,18 +639,22 @@ public class ModOptions {
 	* Set a named Option to wide
 	*
 	* @param name	 Name of option
+	* @return	This object for building
 	*/
-	public void setWideOption(String name) {
+	public ModOptions setWideOption(String name) {
 		gui.setWide(name);
+		
+		return this;
 	}
 	
 	/**
 	* Set a given option to wide
 	*
 	* @param	option	Option object
+	* @return	This object for building
 	*/
-	public void setWideOption(ModOption option) {
-		setWideOption(option.getName());
+	public ModOptions setWideOption(ModOption option) {
+		return setWideOption(option.getName());
 	}
 	
 	/**
@@ -649,9 +662,12 @@ public class ModOptions {
 	*
 	* @param name			Name of option
 	* @param formatter		Formatter
+	* @return	This object for building
 	*/
-	public void setOptionStringFormat(String name, MODisplayString formatter) {
+	public ModOptions setOptionStringFormat(String name, DisplayStringFormatter formatter) {
 		gui.setFormatter(getOption(name), formatter);
+		
+		return this;
 	}
 	
 	/**
@@ -660,9 +676,12 @@ public class ModOptions {
 	* @since	0.6.1
 	* @param	name		Name of option
 	* @param	formatter	Formatter to add
+	* @return	This object for building
 	*/
-	public void addOptionFormatter(String name, MODisplayString formatter) {
+	public ModOptions addOptionFormatter(String name, DisplayStringFormatter formatter) {
 		gui.addFormatter(getOption(name), formatter);
+		
+		return this;
 	}
 	
 	
@@ -692,9 +711,12 @@ public class ModOptions {
 	* Set the parent for this menu
 	*
 	* @param	o		Parent menu
+	* @return	This object for building
 	*/
-	public void setParent(ModOptions o) {
-		parent = o;
+	public ModOptions setParent(ModOptions o) {
+		parent 	= o;
+	
+		return this;
 	}
 	
 	/**
@@ -702,7 +724,7 @@ public class ModOptions {
 	*
 	* @return	Gui controller
 	*/
-	public ModOptionsGuiController getGuiController() {
+	public GuiController getGuiController() {
 		return gui;
 	}
 	
@@ -710,18 +732,24 @@ public class ModOptions {
 	* Set multiplayer value
 	*
 	* @param	multi	True if visible in multiplayer
+	* @return	This object for building
 	*/
-	public void setMultiplayerMode(boolean multi) {
+	public ModOptions setMultiplayerMode(boolean multi) {
 		multiplayer = multi;
+		
+		return this;
 	}
 	
 	/**
 	* Set singleplayer value
 	*
 	* @param	single	True if visible in singleplayer
+	* @return	This object for building
 	*/
-	public void setSingleplayerMode(boolean single) {
+	public ModOptions setSingleplayerMode(boolean single) {
 		singleplayer = single;
+		
+		return this;
 	}
 	
 	//=========================
@@ -753,9 +781,13 @@ public class ModOptions {
 	/**
 	* Loads global values from disk into memory for this
 	* and all sub-menus
+	*
+	* @return	This object for building
 	*/
-	public void loadValues() {
+	public ModOptions loadValues() {
 		loadValues("", false);
+		
+		return this;
 	}
 	
 	/**
@@ -764,8 +796,9 @@ public class ModOptions {
 	*
 	* @param	worldName	Name of world/ server to load for
 	* @param	multi		True if  multiplayer word
+	* @return	This object for building
 	*/
-	public void loadValues(String worldName, boolean multi) {
+	public ModOptions loadValues(String worldName, boolean multi) {
 		String line;
 		// Also load all children
 		for(ModOptions child : this.getSubOptions()) {
@@ -831,6 +864,8 @@ public class ModOptions {
 		} catch (IOException e) {
 			System.out.println("(ModOptionsAPI): IOException occured: " + e.getMessage());
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -838,8 +873,9 @@ public class ModOptions {
 	*
 	* @param	name			worldname
 	* @param	multiplayer		Save to a multiplayer file if true
+	* @return	This object for building
 	*/
-	public void save(String name, boolean multiplayer) {
+	public ModOptions save(String name, boolean multiplayer) {
 		boolean global = (name.length() == 0);
 		// Delete old file, write new
 		File file = getFile(name, multiplayer);
@@ -860,13 +896,19 @@ public class ModOptions {
 		} catch (IOException e) {
 			System.err.println("(ModOptionsAPI): Could not save options to " + name);
 		}
+		
+		return this;
 	}
 	
 	/**
 	* Saves options to disk
+	*
+	* @return	This object for building
 	*/
-	public void save() {
+	public ModOptions save() {
 		save("", false);
+		
+		return this;
 	}
 	
 	/**

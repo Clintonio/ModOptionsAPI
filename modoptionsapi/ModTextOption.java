@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * A text input field option for modoptionsapi

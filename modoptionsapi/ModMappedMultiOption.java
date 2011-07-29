@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 import java.util.LinkedHashMap;
 import java.util.Set;

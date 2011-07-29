@@ -1,12 +1,12 @@
-package modoptionsapi.gui;
+package moapi.gui;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.client.Minecraft;
 
-import modoptionsapi.ModOption;
-import modoptionsapi.ModOptionsGuiController;
+import moapi.ModOption;
+import moapi.ModOptionsGuiController;
 
 /**
 * A part of the inheritance chain for buttons

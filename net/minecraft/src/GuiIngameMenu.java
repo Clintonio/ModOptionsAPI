@@ -10,8 +10,8 @@ import net.minecraft.client.Minecraft;
 //====================
 // START MODOPTIONSAPI
 //====================
-import modoptionsapi.ModOptions;
-import modoptionsapi.gui.ModMenu;
+import moapi.ModOptions;
+import moapi.gui.ModMenu;
 //====================
 // END MODOPTIONSAPI
 //====================

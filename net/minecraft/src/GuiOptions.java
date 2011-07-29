@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import modoptionsapi.gui.ModMenu; 
+import moapi.gui.ModMenu; 
 
 public class GuiOptions extends GuiScreen
 {

@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 import org.lwjgl.input.Keyboard;
 

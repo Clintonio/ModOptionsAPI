@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * This exception will occur when an option was not found

@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * Is thrown when a key is already bound

@@ -1,7 +1,7 @@
-package modoptionsapi.gui; 
+package moapi.gui; 
 
-import modoptionsapi.ModSliderOption;
-import modoptionsapi.ModOptionsGuiController;
+import moapi.ModSliderOption;
+import moapi.ModOptionsGuiController;
 
 import net.minecraft.src.*;
 import net.minecraft.client.Minecraft;

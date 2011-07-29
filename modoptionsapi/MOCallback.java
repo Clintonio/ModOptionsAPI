@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * The callback interface for modoptions API

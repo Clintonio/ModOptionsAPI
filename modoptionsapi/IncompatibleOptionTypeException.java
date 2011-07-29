@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 public class IncompatibleOptionTypeException extends RuntimeException {
 	public IncompatibleOptionTypeException(String msg) {

@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * Boolean Option API

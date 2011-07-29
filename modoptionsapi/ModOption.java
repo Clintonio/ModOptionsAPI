@@ -1,4 +1,4 @@
-package modoptionsapi;
+package moapi;
 
 /**
 * Abstract base class for individual option classes

@@ -11,8 +11,8 @@ import net.minecraft.client.Minecraft;
 //====================
 // START MODOPTIONSAPI
 //====================
-import modoptionsapi.ModOptionsAPI;
-import modoptionsapi.ModOptions;
+import moapi.ModOptionsAPI;
+import moapi.ModOptions;
 //====================
 // END MODOPTIONSAPI
 //====================

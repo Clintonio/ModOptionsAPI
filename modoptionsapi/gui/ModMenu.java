@@ -1,6 +1,6 @@
-package modoptionsapi.gui;
+package moapi.gui;
 
-import modoptionsapi.*;
+import moapi.*;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -39,7 +39,7 @@ public class ModMenu extends GuiScreen {
 	* Current set of options that we are displaying
 	*/
 	private ModOptions 				modOptions 	= null;
-	private ModOptionsGuiController gui 		= null;
+	private GuiController 			gui 		= null;
 	
 	/**
 	* Whether we are in world specific mode or not

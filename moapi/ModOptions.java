@@ -102,7 +102,7 @@ public class ModOptions {
 	*/
 	public ModOption addTextOption(String name) {
 		ModTextOption option = new ModTextOption(name);
-		return addNewOption(option);
+		return addOption(option);
 	}	
 	
 	/**
@@ -117,7 +117,7 @@ public class ModOptions {
 	public ModOption addTextOption(String name, String value) {
 		ModTextOption option = new ModTextOption(name);
 		option.setGlobalValue(value);
-		return addNewOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -130,7 +130,7 @@ public class ModOptions {
 	*/
 	public ModOption addTextOption(String name, int maxlen) {
 		ModTextOption option = new ModTextOption(name, maxlen);
-		return addNewOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ public class ModOptions {
 	public ModOption addTextOption(String name, String value, int maxlen) {
 		ModTextOption option = new ModTextOption(name, maxlen);
 		option.setGlobalValue(value);
-		return addNewOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -176,7 +176,7 @@ public class ModOptions {
 	*/
 	public ModOption addKeyBinding(String name) {
 		ModKeyOption option = new ModKeyOption(name);
-		return addNewOption(option);
+		return addOption(option);
 	}
 	
 	/**
@@ -192,7 +192,7 @@ public class ModOptions {
 	*/
 	public ModOption addKeyOption(String name) {
 		ModKeyOption option = new ModKeyOption(name);
-		return addNewOption(option);
+		return addOption(option);
 	}
 	
 	/**

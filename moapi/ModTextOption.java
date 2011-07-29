@@ -1,5 +1,7 @@
 package moapi;
 
+import moapi.gui.GuiController;
+
 /**
 * A text input field option for modoptionsapi
 * with customisable maximum length

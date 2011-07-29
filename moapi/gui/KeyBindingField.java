@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 
 import moapi.ModOption;
 import moapi.ModKeyOption;
-import moapi.ModOptionsGuiController;
 
 /**
 * GUI for getText() field within MOAPI
@@ -26,7 +25,7 @@ public class KeyBindingField extends TextInputField {
 	private boolean wide = false;
 	
     public KeyBindingField(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j,
-						ModKeyOption op, ModOptionsGuiController gui, boolean global) {
+						ModKeyOption op, GuiController gui, boolean global) {
 		super(id, i, j, fontrenderer, gui);
         enabled 	= true;
         parentGuiScreen = guiscreen;

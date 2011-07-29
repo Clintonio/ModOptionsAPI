@@ -7,7 +7,7 @@ import java.util.Hashtable;
 
 /**
 * Gui controller for a single mod and all of it's suboption menus
-* Moved from ModOptionsGuiController to Controller
+* Moved from GuiController to Controller
 *
 * @author	Clinton Alexander
 * @version	1.1
@@ -154,15 +154,15 @@ public class GuiController {
 			if(o instanceof ModKeyOption) {
 				DisplayStringFormatter s = StdFormatters.noFormat;
 				
-				return s.manipulate(o.getName(), value);
+				return s.manipulate(o, value);
 			} else {
 				// Select a default object
 				DisplayStringFormatter s = StdFormatters.defaultFormat;
-				return s.manipulate(o.getName(), value);
+				return s.manipulate(o, value);
 			}
 		} else {
 			for(DisplayStringFormatter s : formatters.get(o)) {
-				value = s.manipulate(o.getName(), value);
+				value = s.manipulate(o, value);
 			}
 			
 			return value;

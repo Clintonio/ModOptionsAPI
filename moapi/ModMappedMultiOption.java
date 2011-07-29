@@ -10,6 +10,7 @@ import java.util.Map;
 * @author	Clinton Alexander
 * @version	0.1
 * @since	0.1
+* @deprecated	Moved to ModMappedOption
 */
 public class ModMappedMultiOption extends ModOption<Integer> {
 	/**

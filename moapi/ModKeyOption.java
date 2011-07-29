@@ -1,5 +1,7 @@
 package moapi;
 
+import moapi.gui.GuiController;
+
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.src.GameSettings;

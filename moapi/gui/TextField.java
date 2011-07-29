@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 
 import moapi.ModOption;
 import moapi.ModTextOption;
-import moapi.ModOptionsGuiController;
 
 /**
 * GUI for getText() field within MOAPI
@@ -21,7 +20,7 @@ import moapi.ModOptionsGuiController;
 public class TextField extends TextInputField {
 	
     public TextField(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j,
-						ModTextOption op, ModOptionsGuiController gui, boolean global) {
+						ModTextOption op, GuiController gui, boolean global) {
 		super(id, i, j, fontrenderer, gui);
         parentGuiScreen = guiscreen;
         xPosition = i - 50;

@@ -1,9 +1,8 @@
 package moapi.gui; 
 
 import moapi.ModSliderOption;
-import moapi.ModOptionsGuiController;
 
-import net.minecraft.src.*;
+import net.minecraft.src.GuiButton;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +20,7 @@ public class Slider extends GuiButton {
     public boolean dragging;
 	
 	private ModSliderOption			option;
-	private ModOptionsGuiController gui;
+	private GuiController gui;
 	
 	/**
 	* Value determining whether we are in the local/world scope
@@ -37,7 +36,7 @@ public class Slider extends GuiButton {
 	* @param	worldMode	True when using world values
 	*/
     public Slider(int i, int j, int k, ModSliderOption op, 
-					   ModOptionsGuiController gui, boolean worldMode) {
+					   GuiController gui, boolean worldMode) {
 		super(i, j, k, 150, 20,  gui.getDisplayString(op, worldMode));
 		this.gui		= gui;
 		this.worldMode	= worldMode;

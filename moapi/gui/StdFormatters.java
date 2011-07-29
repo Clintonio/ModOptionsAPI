@@ -1,8 +1,10 @@
 package moapi.gui;
 
+import moapi.ModOption;
+
 /**
 * Standard formatters which are used by the API as defaults
-* Moved from MOFormatters to gui.StdFormatters on version 0.8
+* Moved from StdFormatters to gui.StdFormatters on version 0.8
 *
 * @author 	Clinton Alexander
 * @version	1.1
@@ -37,8 +39,8 @@ public class StdFormatters {
 		/**
 		* Format the standard input into a readable string
 		*/
-		public String manipulate(String name, String value) {
-			return name + ": " + value;
+		public String manipulate(ModOption option, String value) {
+			return option.getName() + ": " + value;
 		}
 	}
 	
@@ -56,7 +58,7 @@ public class StdFormatters {
 		* @since	0.7
 		* @return	Same value as input
 		*/
-		public String manipulate(String name, String value) {
+		public String manipulate(ModOption option, String value) {
 			return value;
 		}
 	}
@@ -86,7 +88,7 @@ public class StdFormatters {
 		/**
 		* Format the input into a readable string
 		*/
-		public String manipulate(String name, String value) {
+		public String manipulate(ModOption option, String value) {
 			return value + " " + suffix;
 		}
 	}
@@ -109,14 +111,14 @@ public class StdFormatters {
 		/**
 		* Format the input into a readable string
 		*/
-		public String manipulate(String name, String value) {
+		public String manipulate(ModOption option, String value) {
 			try {
 				float f = Float.parseFloat(value);
 				int i = (int) f;
 				return "" + i;
 			} catch (NumberFormatException e) {		
 				System.out.println("(MdoOptionsAPI) Could not format " + value + " into an integer");
-				return name + ": " + value;
+				return option.getName() + ": " + value;
 			}
 		}
 	}

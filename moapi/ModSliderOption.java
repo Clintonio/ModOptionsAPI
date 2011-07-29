@@ -1,5 +1,7 @@
 package moapi;
 
+import moapi.gui.GuiController;
+
 /**
 * Provides an interface to create a simple bounded slider
 *

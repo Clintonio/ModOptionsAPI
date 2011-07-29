@@ -1,5 +1,7 @@
 package moapi.gui;
 
+import moapi.ModOption;
+
 /**
 * Used to manipulate a display string for a Mod Option.
 * Moved from MODisplayStrng to gui.DisplayStringFormatter in v0.8

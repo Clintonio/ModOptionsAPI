@@ -135,7 +135,7 @@ public class ModMenu extends GuiScreen {
 		
 		for(int i = 0; i < options.length; i++) {
 			yPos = height / 6 + (i * 24) + 12;
-			controlList.add(new GuiButton(i, xPos, yPos, options[i].getName()));
+			controlList.add(new Button(i, xPos, yPos, options[i]));
 		}
 		
 		yPos = height / 6 + 168;
@@ -181,7 +181,7 @@ public class ModMenu extends GuiScreen {
 			// Calculate position of full width bar
 			xPos = width / 2 - 100;
 			yPos = height / 6 + 24 * ((pos + 1) >> 1);
-			controlList.add(new GuiButton(x + 101, xPos, yPos, subOps[x].getName()));
+			controlList.add(new Button(x + 101, xPos, yPos, subOps[x]));
 			pos = pos + 2 + (pos % 2);
 		}
 		
@@ -198,7 +198,6 @@ public class ModMenu extends GuiScreen {
 	private void addModOptionButton(ModOption op, int id, int pos) {
 		int xPos, yPos;
 		// Display string for option
-		String 	display = gui.getDisplayString(op, worldMode);
 		boolean isWide 	= gui.isWide(op);
 		
 		if(!isWide) {
@@ -225,9 +224,10 @@ public class ModMenu extends GuiScreen {
 			
 			btn.setWide(isWide);
 		} else if(!isWide) {
-			controlList.add(new GuiSmallButton(id, xPos, yPos, display));
+			// 150, 20 is the width/ height for a small button
+			controlList.add(new Button(id, xPos, yPos, 150, 20, op, gui, worldMode));
 		} else {
-			controlList.add(new GuiButton(id, xPos, yPos, display));
+			controlList.add(new Button(id, xPos, yPos, op, gui, worldMode));
 		}
 	}
 	
@@ -363,8 +363,9 @@ public class ModMenu extends GuiScreen {
 			changeScreen(parentScreen);
 		// We are in the mod menu and picking a mod
         } else if(modOptions == null) {
+			Button btn 			= (Button) guibutton;
 			// Choose the type of mod options
-			ModOptions modOp = ModOptionsAPI.getModOptions(guibutton.displayString);
+			ModOptions modOp 	= ModOptionsAPI.getModOptions(btn.getID());
 			
 			if(worldMode) {
 				mc.displayGuiScreen(new ModMenu(this, modOp, worldName, multiplayerWorld));
@@ -376,7 +377,8 @@ public class ModMenu extends GuiScreen {
 			// Ignore, handled internally
 		// A sub options button has been pressed
 		} else if((guibutton.id > 100) && (guibutton.id < 200)) {
-			ModOptions modOp = modOptions.getSubOption(guibutton.displayString);
+			Button btn 			= (Button) guibutton;
+			ModOptions modOp 	= modOptions.getSubOption(btn.getID());
 			
 			if(worldMode) {
 				mc.displayGuiScreen(new ModMenu(this, modOp, worldName, multiplayerWorld));

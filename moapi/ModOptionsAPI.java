@@ -187,7 +187,7 @@ public class ModOptionsAPI {
 	* @param	o		A set of options for a mod
 	*/
 	public static void addMod(ModOptions o) {
-		modOptions.put(o.getName(), o);
+		modOptions.put(o.getID(), o);
 	}
 	
 	/**

@@ -18,13 +18,17 @@ public class ModMappedMultiOption extends ModOption<Integer> {
 	*/
 	private LinkedHashMap<Integer, String> values = new LinkedHashMap<Integer, String>();
 	
+	//==============
+	// Constructors
+	//==============
+	
 	/**
 	* Create a multiple selector with no values
 	*
 	* @param	name	Name of selector
 	*/
 	public ModMappedMultiOption(String name) {
-		this.name = name;
+		this(name, name);
 	}
 	
 	/**
@@ -36,15 +40,7 @@ public class ModMappedMultiOption extends ModOption<Integer> {
 	* @param	labels	Labels for values
 	*/
 	public ModMappedMultiOption(String name, Integer[] keys, String[] labels) {
-		if(keys.length != labels.length) {
-			throw new IndexOutOfBoundsException("Keys and labels must have same # of entries");
-		} else {
-			this.name = name;
-			
-			for(int x = 0; x < keys.length; x++) {
-				addValue(keys[x], labels[x]);
-			}
-		}
+		this(name, name, keys, labels);
 	}
 	
 	/**
@@ -56,16 +52,66 @@ public class ModMappedMultiOption extends ModOption<Integer> {
 	* @param	labels	Labels for values
 	*/
 	public ModMappedMultiOption(String name, int[] keys, String[] labels) {
+		this(name, name, keys, labels);
+	}
+	
+	/**
+	* Create a multiple selector with the given keys and labels and ID/name
+	*
+	* @since	0.8
+	* @throws	IndexOutOfBoundsException	Thrown when keys and labels differ in length
+	* @param	id		ID of selector
+	* @param	name	Name of selector
+	* @param	values	Values for the selector
+	* @param	labels	Labels for values
+	*/
+	public ModMappedMultiOption(String id, String name, Integer[] keys, String[] labels) {
+		this(id, name);
 		if(keys.length != labels.length) {
 			throw new IndexOutOfBoundsException("Keys and labels must have same # of entries");
 		} else {
-			this.name = name;
+			
+			for(int x = 0; x < keys.length; x++) {
+				addValue(keys[x], labels[x]);
+			}
+		}
+	}
+	
+	/**
+	* Create a multiple selector with the given keys and labels
+	*
+	* @since	0.8
+	* @throws	IndexOutOfBoundsException	Thrown when keys and labels differ in length
+	* @param	name	Name of selector
+	* @param	values	Values for the selector
+	* @param	labels	Labels for values
+	*/
+	public ModMappedMultiOption(String id, String name, int[] keys, String[] labels) {
+		this(id, name);
+		if(keys.length != labels.length) {
+			throw new IndexOutOfBoundsException("Keys and labels must have same # of entries");
+		} else {
 			
 			for(int x = 0; x < keys.length; x++) {
 				addValue(new Integer(keys[x]), labels[x]);
 			}
 		}
 	}
+	
+	/**
+	* Creates a multi selector with the given name/ id and no values
+	*
+	* @since	0.8
+	* @param	id		ID of this option
+	* @param	name	Name of this option
+	*/
+	public ModMappedMultiOption(String id, String name) {
+		super(id, name);
+	}
+	
+	//==============
+	// Adders
+	//==============
 	
 	/**
 	* Add a single value to this selector
@@ -91,6 +137,10 @@ public class ModMappedMultiOption extends ModOption<Integer> {
 	public void addValue(int intKey, String value) {
 		addValue(new Integer(intKey), value);
 	}
+	
+	//==============
+	// Getters
+	//==============
 	
 	/**
 	* Gets the string representation

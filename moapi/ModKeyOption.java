@@ -17,34 +17,60 @@ import java.util.prefs.InvalidPreferencesFormatException;
 * type.
 *
 * @author	Clinton Alexander
-* @version	1.0.0.0
+* @version	1.0
 * @since 	0.7
 */
 public class ModKeyOption extends ModOption<Integer> {
 	/**
 	* Current key bindings, implemented as a single value due to the
 	* fact that keys can only have one configuration per world
+	*
+	* @since 	0.7
 	*/
 	private static Hashtable<Integer, ModOption> bindings = new Hashtable<Integer, ModOption>();
 	/**
 	* The default Integer
+	*
+	* @since 	0.7
 	*/
 	public static final Integer defaultVal = Keyboard.KEY_NONE;
+	
+	//==============
+	// Constructors
+	//==============
 	
 	/**
 	* Constructor for key binding option
 	*
+	* @since 	0.7
 	* @param	name	Name of option
 	*/
 	public ModKeyOption(String name) {
-		this.name = name;
+		this(name, name);
+	}
+	
+	/**
+	* Constructor with ID for key binding option
+	*
+	* @since	0.8
+	* @param	id		ID of option
+	* @param	name	Name of option
+	*/
+	public ModKeyOption(String id, String name) {
+		super(id, name);
 		
 		setValue(defaultVal, true);
 		setValue(defaultVal, false);
 	}
+	
+	//==============
+	// Setters
+	//==============
+	
 	/**
 	* Set the current used value of this option selector
-	* 
+	*
+	* @since 	0.7
 	* @param	value		New value
 	*/
 	public void setValue(int value) {
@@ -54,7 +80,8 @@ public class ModKeyOption extends ModOption<Integer> {
 	/**
 	* Set the current used value of this option selector fr a given 
 	* scope
-	* 
+	*
+	* @since 	0.7
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
@@ -65,7 +92,8 @@ public class ModKeyOption extends ModOption<Integer> {
 	/**
 	* Set the current used value of this option selector for a given
 	* scope
-	* 
+	*
+	* @since 	0.7
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
@@ -75,7 +103,8 @@ public class ModKeyOption extends ModOption<Integer> {
 	
 	/**
 	* Set the current used value of this option selector
-	* 
+	*
+	* @since 	0.7
 	* @throws	KeyAlreadyBoundException	When attempting to remind a key
 	* @param	value		New value
 	*/
@@ -99,9 +128,14 @@ public class ModKeyOption extends ModOption<Integer> {
 		}
 	}
 	
+	//==============
+	// Checks
+	//==============
+	
 	/**
 	* Check if a key is already bound
 	*
+	* @since 	0.7
 	* @param	c	Integer to check
 	* @return	True if already bound
 	*/
@@ -109,9 +143,14 @@ public class ModKeyOption extends ModOption<Integer> {
 		return ((!c.equals(defaultVal)) && bindings.containsKey(c));
 	}
 	
+	//==============
+	// Getters
+	//==============
+	
 	/**
 	* Get a name of a key. "INVALID" for no value
 	*
+	* @since 	0.7
 	* @param	key		Key to get value for
 	* @return	String for key
 	*/

@@ -50,7 +50,7 @@ public class GuiController {
 	* @param	option	Option to set wide
 	*/
 	public void setWide(ModOption option) {
-		setWide(option.getName());
+		setWide(option.getID());
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class GuiController {
 		if(o instanceof ModTextOption) {
 			return true;
 		} else {
-			return wide.contains(o.getName());
+			return wide.contains(o.getID());
 		}
 	}
 	

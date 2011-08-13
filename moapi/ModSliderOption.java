@@ -1,12 +1,10 @@
 package moapi;
 
-import moapi.gui.GuiController;
-
 /**
 * Provides an interface to create a simple bounded slider
 *
 * @author	Clinton Alexander
-* @version	0.1
+* @version	1.0
 * @since	0.1
 */
 public class ModSliderOption extends ModOption<Float> {
@@ -19,15 +17,17 @@ public class ModSliderOption extends ModOption<Float> {
 	*/
 	private int high = 100;
 	
+	//==============
+	// Constructors
+	//==============
+	
 	/**
-	* Create a slider identified by given name
+	* Create a slider with given name
 	*
 	* @param	name	Name of this slider
 	*/
 	public ModSliderOption(String name) {
-		this.name = name;
-		value = 1.0F;
-		localValue = 1.0F;
+		this(name, name);
 	}
 	
 	/**
@@ -38,10 +38,40 @@ public class ModSliderOption extends ModOption<Float> {
 	* @param	high	Highest value of slider
 	*/
 	public ModSliderOption(String name, int low, int high) {
-		this(name);
+		this(name, name, low, high);
+	}
+	
+	/**
+	* Create a bounded slider with a given ID
+	*
+	* @since	0.8
+	* @param	id		ID of this option
+	* @param	name	Name of slider
+	* @param	low		Lowest value of slider
+	* @param	high	Highest value of slider
+	*/
+	public ModSliderOption(String id, String name, int low, int high) {
+		this(id, name);
 		this.low = low;
 		this.high = high;
 	}
+	
+	/**
+	* Create a slider option with a given id and name
+	*
+	* @since	0.8
+	* @param	id		ID value for this slider
+	* @param	name	Name of this slider
+	*/
+	public ModSliderOption(String id, String name) {
+		super(id, name);
+		value 		= 1.0F;
+		localValue 	= 1.0F;
+	}
+	
+	//==============
+	// Getters
+	//==============
 	
 	/**
 	* Get the highest value of the slider
@@ -60,6 +90,29 @@ public class ModSliderOption extends ModOption<Float> {
 	public int getLowVal() {
 		return low;
 	}
+	
+	/**
+	* Returns a bounded value
+	*
+	* @since	0.6.1
+	* @param	value	Unbounded value
+	* @param	lower	Lower bound
+	* @param	upper	Upper bound
+	* @return	Bounded value
+	*/
+	private float getBoundedValue(float value, int lower, int upper) {
+		if(value < lower) {
+			return (float) lower;
+		} else if(value > upper) {
+			return (float) upper;
+		} else {
+			return value;
+		}
+	}
+	
+	//==============
+	// Setters
+	//==============
 	
 	/**
 	* Set the float value
@@ -117,6 +170,10 @@ public class ModSliderOption extends ModOption<Float> {
 		setGlobalValue((float) value);
 	}
 	
+	//==============
+	// Transformers
+	//==============
+	
 	/**
 	* Transforms the given value from it's current upper and lower bounds
 	* to the corresponding place in the ones provided
@@ -153,88 +210,5 @@ public class ModSliderOption extends ModOption<Float> {
 		float out = (value * (high - low)) + low;
 		
 		return out;
-	}
-	
-	/**
-	* Returns a bounded value
-	*
-	* @since	0.6.1
-	* @param	value	Unbounded value
-	* @param	lower	Lower bound
-	* @param	upper	Upper bound
-	* @return	Bounded value
-	*/
-	private float getBoundedValue(float value, int lower, int upper) {
-		if(value < lower) {
-			return (float) lower;
-		} else if(value > upper) {
-			return (float) upper;
-		} else {
-			return value;
-		}
-	}
-	
-	/**
-	* Get the rounded and bounded integer value of the slider
-	*
-	* @deprecated	This is depreciated code and will be removed in 0.7
-	*				Float values are automatically generated now, you can just do (int) obj.getValue();
-	* @param	value	value to convert
-	* @return	Rounded integer value of the slider
-	*/
-	@Deprecated
-	public int getIntValue(float value) {
-		return (int) value;
-	}
-	
-	/**
-	* Sets the value of this slider by integer
-	*
-	* @deprecated	No need for this method now that the internal representation has
-	*				been abstracted out. You will now get a value between low and high from getValue in float 
-	*				form, use (int) obj.getValue();
-	* @param	val		Integer value of slider
-	*/
-	@Deprecated
-	public void setIntValue(int val) {
-		setValue(val);
-	}
-	/**
-	* Get the bounded float value of the slider
-	* for the current scope value
-	*
-	* @deprecated	This is depreciated code and will be removed in 0.7 use getValue instead
-	* @return	Bounded float value of slider
-	*/
-	@Deprecated
-	public float getFloatValue() {
-		return getValue();
-	}
-	
-	/**
-	* Get the bounded float value of the slider
-	*
-	* @deprecated	This is depreciated code and will be removed in 0.7
-	*				Float values are automatically generated now.
-	* @param	value	value to convert
-	* @return	Bounded float value of slider
-	*/
-	@Deprecated
-	public float getFloatValue(int value) {
-		return (float) value;
-	}
-	
-	/**
-	* Get the rounded and bounded integer value of the slider#
-	* for current scope
-	*
-	* @deprecated	This is depreciated code and will be removed in 0.7
-	*				Float values are automatically generated now, you can just do (int) obj.getValue();
-	* @param	value	value to convert
-	* @return	Rounded integer value of the slider
-	*/
-	@Deprecated
-	public int getIntValue() {
-		return (int) getValue().intValue();
 	}
 }

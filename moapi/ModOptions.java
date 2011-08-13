@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.PatternSyntaxException;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileWriter;
@@ -15,6 +16,9 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import net.minecraft.client.Minecraft;
 
 /**
@@ -39,6 +43,14 @@ public class ModOptions {
 	private static final GuiController gui = new GuiController();
 	
 	/**
+	* ID of this menu, which is used
+	* for the file structure and to avoid coupling
+	* the display name to the underlying values
+	*
+	* @since	0.8
+	*/
+	private String id;
+	/**
 	* Name of this menu
 	*/
 	private String name;
@@ -58,25 +70,48 @@ public class ModOptions {
 	private boolean singleplayer = true;
 	
 	/**
+	* The pattern matcher to detect illegal filenames
+	*
+	* @since	0.8
+	*/
+	private static final Pattern illegalNamePattern = Pattern.compile("[/\\?%*:|\"<>]+");
+	
+	/**
 	* Create a new set of options with no parent. A mod package
 	*
-	* @note		DO NOT USE : in the name
+	* @note		Valid folder names only.
+	* @throws 	PatternSyntaxException	When an invalid folder name is specified
 	* @param	name	Name of option list (menu name)
 	*/
 	public ModOptions(String name) {
-		this.name = name;
+		this(name, name);
 	}
 	
 	/**
 	* Create a sub options menu for a mod package
 	*
+	* @throws 	PatternSyntaxException	When an invalid folder name is specified
 	* @param	name	Name of this option list
 	* @param	p		Parent of this option list
 	*/
 	public ModOptions(String name, ModOptions p) {
-		this.name 	= name;
+		this(name, name);
 		parent 		= p;
 	}
+	
+	/**
+	* Create a sub option menu with no parent
+	*
+	* @since	0.8
+	* @throws 	PatternSyntaxException	When an invalid folder name is specified
+	* @param	id		ID of this option list
+	* @param	name	Name of this option set
+	*/
+	public ModOptions(String id, String name) {
+		setID(id);
+		this.name = name;
+	}
+	
 	
 	//=========================
 	// Adding Options Methods
@@ -89,7 +124,7 @@ public class ModOptions {
 	* @return	Returns the option just added for further operations
 	*/
 	public ModOption addOption(ModOption option) {
-		options.put(option.getName(), option);
+		options.put(option.getID(), option);
 		return option;
 	}
 	
@@ -300,7 +335,7 @@ public class ModOptions {
 	*/
 	public ModOptions addSubOptions(ModOptions m) {
 		m.setParent(this);
-		subOptions.put(m.getName(), m);
+		subOptions.put(m.getID(), m);
 		
 		return this;
 	}
@@ -308,11 +343,11 @@ public class ModOptions {
 	/**
 	* Check if this mod options has a given sub options menu
 	*
-	* @param	name	Name of sub options
+	* @param	id of sub options
 	* @return	true if sub options exist in this menu
 	*/
-	public boolean containsSubOptions(String name) {
-		return subOptions.containsKey(name);
+	public boolean containsSubOptions(String id) {
+		return subOptions.containsKey(id);
 	}
 	
 	/**
@@ -371,11 +406,11 @@ public class ModOptions {
 	/**
 	* Get a named set of sub-options
 	*
-	* @param	name		Name of sub-options
+	* @param	id		ID of sub-options
 	* @return	A sub-set of options
 	*/
-	public ModOptions getSubOption(String name) {
-		return subOptions.get(name);
+	public ModOptions getSubOption(String id) {
+		return subOptions.get(id);
 	}
 	
 	//=========================
@@ -420,23 +455,22 @@ public class ModOptions {
 	/**
 	* Return a single named option
 	*
-	* @param	name	Name of option selector
+	* @param	id		ID of option selector
 	* @return	Option selector
 	*/
-	public ModOption getOption(String name) {
-		return options.get(name);
+	public ModOption getOption(String id) {
+		return options.get(id);
 	}
 	
 	/**
 	* Returns a single named option's internal value
 	*
-	* @return	Value of option, as an object
+	* @return	Value of option, as a string
 	*/
-	public String getOptionValue(String name) {
-		ModOption option = options.get(name);
+	public String getOptionValue(String id) {
+		ModOption option = options.get(id);
 		if(option instanceof ModSliderOption) {
-			return  Integer.toString(((ModSliderOption) option)
-						   .getIntValue(((ModSliderOption) option).getValue()));
+			return  Integer.toString(((ModSliderOption) option).getValue().intValue());
 		} else {
 			return option.getValue().toString();
 		}
@@ -448,16 +482,16 @@ public class ModOptions {
 	* @since	0.7
 	* @throws	NoSuchOptionException	When no option is present
 	* @throws	IncompatibleOptionTypeException
-	* @param	name					Name of option
+	* @param	id					ID of option
 	* @return	Value of a toggle option
 	*/
-	public String getTextValue(String name) throws NoSuchOptionException {
-		ModOption option = options.get(name);
+	public String getTextValue(String id) throws NoSuchOptionException {
+		ModOption option = options.get(id);
 		
 		if(option == null) {
-			throw new NoSuchOptionException("No option named " + name);
+			throw new NoSuchOptionException("No option identified by " + id);
 		} else if(!(option instanceof ModTextOption)) {
-			throw new IncompatibleOptionTypeException("Option " + name + " is not a text option");
+			throw new IncompatibleOptionTypeException("Option " + id + " is not a text option");
 		} else {
 			return ((ModTextOption) option).getValue();
 		}
@@ -469,16 +503,16 @@ public class ModOptions {
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
 	* @throws	IncompatibleOptionTypeException
-	* @param	name					Name of the option
+	* @param	id						ID of the option
 	* @return	Value of a toggle option
 	*/
-	public boolean getToggleValue(String name) throws NoSuchOptionException {
-		ModOption option = options.get(name);
+	public boolean getToggleValue(String id) throws NoSuchOptionException {
+		ModOption option = options.get(id);
 		
 		if(option == null) {
-			throw new NoSuchOptionException("No option named " + name);
+			throw new NoSuchOptionException("No option identified by " + id);
 		} else if(!(option instanceof ModBooleanOption)) {
-			throw new IncompatibleOptionTypeException("Option " + name + " is not a toggle option");
+			throw new IncompatibleOptionTypeException("Option " + id + " is not a toggle option");
 		} else {
 			return ((ModBooleanOption) option).getValue();
 		}
@@ -490,16 +524,16 @@ public class ModOptions {
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
 	* @throws	IncompatibleOptionTypeException
-	* @param	name					Name of the option
+	* @param	id					ID of the option
 	* @return	Value of a slider option
 	*/
-	public float getSliderValue(String name) throws NoSuchOptionException {
-		ModOption option = options.get(name);
+	public float getSliderValue(String id) throws NoSuchOptionException {
+		ModOption option = options.get(id);
 		
 		if(option == null) {
-			throw new NoSuchOptionException("No option named " + name);
+			throw new NoSuchOptionException("No option identified by " + id);
 		} else if(!(option instanceof ModSliderOption)) {
-			throw new IncompatibleOptionTypeException("Option " + name + " is not a slider option");
+			throw new IncompatibleOptionTypeException("Option " + id + " is not a slider option");
 		} else {
 			return ((ModSliderOption) option).getValue().floatValue();
 		}
@@ -511,16 +545,16 @@ public class ModOptions {
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
 	* @throws	IncompatibleOptionTypeException
-	* @param	name					Name of the option
+	* @param	id					ID of the option
 	* @return	Value of a mapped multi option
 	*/
-	public int getMappedValue(String name) throws NoSuchOptionException {
-		ModOption option = options.get(name);
+	public int getMappedValue(String id) throws NoSuchOptionException {
+		ModOption option = options.get(id);
 		
 		if(option == null) {
-			throw new NoSuchOptionException("No option named " + name);
+			throw new NoSuchOptionException("No option identified by " + id);
 		} else if(!(option instanceof ModMappedMultiOption)) {
-			throw new IncompatibleOptionTypeException("Option " + name + " is not a mapped multi option");
+			throw new IncompatibleOptionTypeException("Option " + id + " is not a mapped multi option");
 		} else {
 			return ((ModMappedMultiOption) option).getValue();
 		}
@@ -531,12 +565,12 @@ public class ModOptions {
 	*
 	* @throws	IncompatibleOptionTypeException
 	* @throws	NoSuchOptionException				When the option doesn't already exist
-	* @param	name		Name of boolean toggle to change
+	* @param	id			ID of boolean toggle to change
 	* @param	value		New value of toggle
 	* @return	This object for building
 	*/
-	public ModOptions setOptionValue(String name, boolean value) {
-		ModOption m = this.getOption(name);
+	public ModOptions setOptionValue(String id, boolean value) {
+		ModOption m = this.getOption(id);
 		if(m == null) {
 			throw new NoSuchOptionException();
 		} else if(m instanceof ModBooleanOption) {
@@ -555,12 +589,12 @@ public class ModOptions {
 	* @since	0.7
 	* @throws	IncompatibleOptionTypeException
 	* @throws	NoSuchOptionException				When the option doesn't already exist
-	* @param	name		Name of slider option to change
+	* @param	id			ID of slider option to change
 	* @param	value		New value of toggle
 	* @return	This object for building
 	*/
-	public ModOptions setOptionValue(String name, Integer value) {
-		ModOption m = this.getOption(name);
+	public ModOptions setOptionValue(String id, Integer value) {
+		ModOption m = this.getOption(id);
 		if(m == null) {
 			throw new NoSuchOptionException();
 		} else if(m instanceof ModSliderOption) {
@@ -581,12 +615,12 @@ public class ModOptions {
 	*
 	* @throws	IncompatibleOptionTypeException
 	* @throws	NoSuchOptionException				When the option doesn't already exist
-	* @param	name		Name of slider option to change
+	* @param	id			ID of slider option to change
 	* @param	value		New value of toggle
 	* @return	This object for building
 	*/
-	public ModOptions setOptionValue(String name, int value) {
-		return setOptionValue(name, new Integer(value));
+	public ModOptions setOptionValue(String id, int value) {
+		return setOptionValue(id, new Integer(value));
 	}
 	
 	/**
@@ -594,12 +628,12 @@ public class ModOptions {
 	*
 	* @throws	IncompatibleOptionTypeException
 	* @throws	NoSuchOptionException				When the option doesn't already exist
-	* @param	name		Name of multi toggle to change
+	* @param	id			ID of multi toggle to change
 	* @param	value		New value of toggle
 	* @return	This object for building
 	*/
-	public ModOptions setOptionValue(String name, String value) {
-		ModOption m = this.getOption(name);
+	public ModOptions setOptionValue(String id, String value) {
+		ModOption m = this.getOption(id);
 		if(m == null) {
 			throw new NoSuchOptionException();
 		} else if(m instanceof ModMultiOption) {
@@ -638,11 +672,11 @@ public class ModOptions {
 	/**
 	* Set a named Option to wide
 	*
-	* @param name	 Name of option
+	* @param 	id	 ID of option to set wide
 	* @return	This object for building
 	*/
-	public ModOptions setWideOption(String name) {
-		gui.setWide(name);
+	public ModOptions setWideOption(String id) {
+		gui.setWide(id);
 		
 		return this;
 	}
@@ -650,22 +684,23 @@ public class ModOptions {
 	/**
 	* Set a given option to wide
 	*
+	* @since	0.7
 	* @param	option	Option object
 	* @return	This object for building
 	*/
 	public ModOptions setWideOption(ModOption option) {
-		return setWideOption(option.getName());
+		return setWideOption(option.getID());
 	}
 	
 	/**
 	* Set an option's string format, will remove any other formatters
 	*
-	* @param name			Name of option
-	* @param formatter		Formatter
+	* @param 	id				ID of option
+	* @param 	formatter		Formatter
 	* @return	This object for building
 	*/
-	public ModOptions setOptionStringFormat(String name, DisplayStringFormatter formatter) {
-		gui.setFormatter(getOption(name), formatter);
+	public ModOptions setOptionStringFormat(String id, DisplayStringFormatter formatter) {
+		gui.setFormatter(getOption(id), formatter);
 		
 		return this;
 	}
@@ -674,20 +709,56 @@ public class ModOptions {
 	* Add a formatter to the set of formatters for the given option
 	*
 	* @since	0.6.1
-	* @param	name		Name of option
+	* @param	id			ID of option
 	* @param	formatter	Formatter to add
 	* @return	This object for building
 	*/
-	public ModOptions addOptionFormatter(String name, DisplayStringFormatter formatter) {
-		gui.addFormatter(getOption(name), formatter);
+	public ModOptions addOptionFormatter(String id, DisplayStringFormatter formatter) {
+		gui.addFormatter(getOption(id), formatter);
 		
 		return this;
 	}
 	
+	/**
+	* Set an option's string format, will remove any other formatters
+	*
+	* @since	0.8
+	* @param 	option			Option to add formatter to
+	* @param 	formatter		Formatter
+	* @return	This object for building
+	*/
+	public ModOptions setOptionStringFormat(ModOption option, DisplayStringFormatter formatter) {
+		gui.setFormatter(option, formatter);
+		
+		return this;
+	}
+	
+	/**
+	* Add a formatter to the set of formatters for the given option
+	*
+	* @since	0.8
+	* @param	option		Option to add formatter to
+	* @param	formatter	Formatter to add
+	* @return	This object for building
+	*/
+	public ModOptions addOptionFormatter(ModOption option, DisplayStringFormatter formatter) {
+		gui.addFormatter(option, formatter);
+		
+		return this;
+	}
 	
 	//=========================
-	// Getters and Setters
+	// Getters
 	//=========================
+	
+	/**
+	* Return the ID for this menu
+	*
+	* @return	ID of this menu
+	*/
+	public String getID() {
+		return id;
+	}
 	
 	/**
 	* Return name for this menu
@@ -726,6 +797,27 @@ public class ModOptions {
 	*/
 	public GuiController getGuiController() {
 		return gui;
+	}
+	
+	//=========================
+	// Setters
+	//=========================
+	
+	/**
+	* Set the ID of this options
+	*
+	* @since	0.8
+	* @throws	PatternSyntaxException 	When ID is invalid
+	* @param	id						ID to use
+	*/
+	private void setID(String id) {
+		Matcher m = illegalNamePattern.matcher(id);
+		
+		if(m.matches()) {
+			throw new PatternSyntaxException("(ModOptions) Please do not use special characters for ID","",0);
+		} else {
+			this.id = id;
+		}
 	}
 	
 	/**
@@ -811,16 +903,16 @@ public class ModOptions {
 			HashMap map 			= new HashMap<String, String>();
 			while((line = reader.readLine()) != null) {
 				String[] 	parts 	= line.split(":", 2);
-				String 		name 	= parts[0];
+				String 		id 		= parts[0];
 				String 		value 	= parts[1].replace(":", "");
-				map.put(name, value);
+				map.put(id, value);
 			}
 			
 			for(ModOption o : this.getOptions()) {
 				try {
 					// If the option is saved to the disk
-					if(map.containsKey(o.getName())) {
-						String 	val 	= (String) map.get(o.getName());
+					if(map.containsKey(o.getID())) {
+						String 	val 	= (String) map.get(o.getID());
 						boolean global	= (worldName.length() == 0);
 						
 						if(o instanceof ModSliderOption) {
@@ -888,7 +980,7 @@ public class ModOptions {
 				// Only record if it's a global value or a local non-global reference value
 				if((obj != null) && (global || (!o.useGlobalValue()))) {
 					// Remove all ":" in the name. 
-					printwriter.println(o.getName().replace(":", "") + ":" + obj.toString());
+					printwriter.println(o.getID().replace(":", "") + ":" + obj.toString());
 				}
 			}
 			
@@ -917,11 +1009,11 @@ public class ModOptions {
 	* @return	Directory for this set of options
 	*/
 	private String getDir() {
-		String		subDir 		= name;
+		String		subDir 		= getID();
 		ModOptions 	p			= parent;
 		String 		fileName;
 		while(p != null) {
-			subDir = p.getName() + "/" + subDir;
+			subDir = p.getID() + "/" + subDir;
 			p = p.getParent();
 		}
 		

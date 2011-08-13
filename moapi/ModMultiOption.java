@@ -6,7 +6,7 @@ import java.util.LinkedList;
 * Multiple Selector API
 *
 * @author	Clinton Alexander
-* @version	0.1
+* @version	1.0
 * @since	0.1
 */
 public class ModMultiOption extends ModOption<String> {
@@ -15,13 +15,17 @@ public class ModMultiOption extends ModOption<String> {
 	*/
 	private LinkedList<String> values = new LinkedList<String>();
 	
+	//==============
+	// Constructors
+	//==============
+	
 	/**
 	* Create a multiple selector with no values
 	*
 	* @param	name	Name of selector
 	*/
 	public ModMultiOption(String name) {
-		this.name = name;
+		this(name, name);
 	}
 	
 	/**
@@ -31,7 +35,18 @@ public class ModMultiOption extends ModOption<String> {
 	* @param	values	Values for selector
 	*/
 	public ModMultiOption(String name, String[] values) {
-		this.name = name;
+		this(name, name, values);
+	}
+	
+	/**
+	* Creates a multiple selector with given values and given name/id
+	*
+	* @param	id		ID of the selector
+	* @param	name	Name of selector
+	* @param	values	Values for selector
+	*/
+	public ModMultiOption(String id, String name, String[] values) {
+		this(id, name);
 		// Set current/ first/ default value
 		
 		if(values.length > 0) {
@@ -43,6 +58,21 @@ public class ModMultiOption extends ModOption<String> {
 			}
 		}
 	}
+	
+	/**
+	* Creates a multiple selector with no values and the given name/id
+	*
+	* @since	0.8
+	* @param	id		ID of selector
+	* @param	name	Name of selector
+	*/
+	public ModMultiOption(String id, String name) {
+		super(id, name);
+	}
+	
+	//==============
+	// Adders
+	//==============
 	
 	/**
 	* Add a single value to this selector
@@ -57,6 +87,10 @@ public class ModMultiOption extends ModOption<String> {
 		
 		this.values.add(value);
 	}
+	
+	//==============
+	// Getters
+	//==============
 	
 	/**
 	* Gets the next value in this selector

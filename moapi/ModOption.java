@@ -4,10 +4,16 @@ package moapi;
 * Abstract base class for individual option classes
 *
 * @author	Clinton Alexander
-* @version	0.1
+* @version	1.0
 * @since	0.1
 */
 abstract public class ModOption<E> {
+	/**
+	* The identifier for this option.
+	* 
+	* @since	0.8
+	*/
+	private String id;
 	/**
 	* Given name for this option selector
 	*/
@@ -29,13 +35,53 @@ abstract public class ModOption<E> {
 	*/
 	protected MOCallback callback = null;
 	
+	//==============
+	// Constructor
+	//==============
+	
 	/**
-	* Return the name of this option selector
+	* Default constructor, requires an ID
 	*
-	* @return	Name of option selector
+	* @since	0.8
+	* @param	id		Identifier for this option
 	*/
-	public String getName() {
-		return name;
+	protected ModOption(String id) {
+		setID(id);
+		setName(id);
+	}
+	
+	/**
+	* Default constructor with a name
+	*
+	* @since	0.8
+	* @param	id		Identified for this option
+	* @param	name	Name for this option
+	*/
+	protected ModOption(String id, String name) {
+		setID(id);
+		setName(name);
+	}
+	
+	//==============
+	// Setters
+	//==============
+	
+	/**
+	* Sets the ID of this option
+	*
+	* @since	0.8
+	*/
+	private final void setID(String id) {
+		this.id = id;
+	}
+	
+	/**
+	* Set the name of this option
+	*
+	* @param	name	New name for this option
+	*/
+	protected void setName(String name) {
+		this.name = name;
 	}
 	
 	/**
@@ -83,6 +129,48 @@ abstract public class ModOption<E> {
 	public void setGlobalValue(E value) {
 		setValue(value, true);
 	}
+	
+	/**
+	* Set the scope of the value
+	*
+	* @param	global	True if use global value only
+	*/
+	public void setGlobal(boolean global) {
+		this.global = global;
+	}
+	
+	/**
+	* Set the callback for this option
+	*
+	* @param	callback	The callback to set
+	*/
+	public void setCallback(MOCallback callback) {
+		this.callback = callback;
+	}
+	
+	//==============
+	// Getters
+	//==============
+	
+	/**
+	* Get the ID of this option selector
+	*
+	* @since	0.8
+	* @return	ID of this option
+	*/
+	public final String getID() {
+		return id;
+	}
+	
+	/**
+	* Return the name of this option selector
+	*
+	* @return	Name of option selector
+	*/
+	public String getName() {
+		return name;
+	}
+	
 	
 	/**
 	* Get value of this option selector
@@ -140,15 +228,6 @@ abstract public class ModOption<E> {
 	}
 	
 	/**
-	* Set the scope of the value
-	*
-	* @param	global	True if use global value only
-	*/
-	public void setGlobal(boolean global) {
-		this.global = global;
-	}
-	
-	/**
 	* Returns the callback
 	*
 	* @return	callback object
@@ -164,14 +243,5 @@ abstract public class ModOption<E> {
 	*/
 	public boolean hasCallback() {
 		return (callback instanceof MOCallback);
-	}
-	
-	/**
-	* Set the callback for this option
-	*
-	* @param	callback	The callback to set
-	*/
-	public void setCallback(MOCallback callback) {
-		this.callback = callback;
 	}
 }

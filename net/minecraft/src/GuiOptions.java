@@ -23,7 +23,7 @@ public class GuiOptions extends GuiScreen
         StringTranslate stringtranslate = StringTranslate.getInstance();
         screenTitle = stringtranslate.translateKey("options.title");
         int i = 0;
-        EnumOptions aenumoptions[] = field_22135_k;
+        EnumOptions aenumoptions[] = relevantOptions;
         int j = aenumoptions.length;
         for(int k = 0; k < j; k++)
         {
@@ -98,12 +98,12 @@ public class GuiOptions extends GuiScreen
     private GuiScreen parentScreen;
     protected String screenTitle;
     private GameSettings options;
-    private static EnumOptions field_22135_k[];
+    private static EnumOptions relevantOptions[];
 
     static 
     {
-        field_22135_k = (new EnumOptions[] {
-            EnumOptions.MUSIC, EnumOptions.SOUND, EnumOptions.INVERT_MOUSE, EnumOptions.SENSITIVITY, EnumOptions.DIFFICULTY
+        relevantOptions = (new EnumOptions[] {
+            EnumOptions.MUSIC, EnumOptions.SOUND, EnumOptions.INVERT_MOUSE, EnumOptions.SENSITIVITY, EnumOptions.FOV, EnumOptions.DIFFICULTY
         });
     }
 }

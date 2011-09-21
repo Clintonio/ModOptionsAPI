@@ -245,6 +245,7 @@ public class ModOptions {
 	/**
 	* Adds a mapped multi option
 	*
+	* @deprecated Name out of use
 	* @throws 	IndexOutOfBoundsException
 	* @param	name	Name of selector
 	* @param	keys	Keys for selector
@@ -268,6 +269,7 @@ public class ModOptions {
 	/**
 	* Adds a mapped multi option
 	*
+	* @deprecated Name out of use
 	* @throws 	IndexOutOfBoundsException
 	* @param	name	Name of selector
 	* @param	keys	Keys for selector
@@ -280,6 +282,52 @@ public class ModOptions {
 			throw new IndexOutOfBoundsException("Arrays are not same length");
 		} else {
 			ModMappedMultiOption option = new ModMappedMultiOption(name);
+			for(int x = 0; x < keys.length; x++) {
+				option.addValue(new Integer(keys[x]), values[x]);
+			}
+			
+			return addOption(option);
+		}
+	}
+	
+	/**
+	* Adds a mapped option
+	*
+	* @throws 	IndexOutOfBoundsException
+	* @param	name	Name of selector
+	* @param	keys	Keys for selector
+	* @param	values	Values for selector
+	* @return	Returns the option just added for further operations
+	*/
+	public ModOption addMappedOption(String name, Integer[] keys, String[] values) 
+		throws IndexOutOfBoundsException {
+		if(keys.length != values.length) {
+			throw new IndexOutOfBoundsException("Arrays are not same length");
+		} else {
+			ModMappedOption option = new ModMappedOption(name);
+			for(int x = 0; x < keys.length; x++) {
+				option.addValue(keys[x], values[x]);
+			}
+			
+			return addOption(option);
+		}
+	}
+	
+	/**
+	* Adds a mapped option
+	*
+	* @throws 	IndexOutOfBoundsException
+	* @param	name	Name of selector
+	* @param	keys	Keys for selector
+	* @param	values	Values for selector
+	* @return	Returns the option just added for further operations
+	*/
+	public ModOption addMappedOption(String name, int[] keys, String[] values) 
+		throws IndexOutOfBoundsException {
+		if(keys.length != values.length) {
+			throw new IndexOutOfBoundsException("Arrays are not same length");
+		} else {
+			ModMappedOption option = new ModMappedOption(name);
 			for(int x = 0; x < keys.length; x++) {
 				option.addValue(new Integer(keys[x]), values[x]);
 			}

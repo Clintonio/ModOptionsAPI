@@ -1,12 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
-
 //====================
 // START MODOPTIONSAPI
 //====================
@@ -18,8 +13,10 @@ import moapi.gui.ModMenu;
 
 public class GuiIngameMenu extends GuiScreen
 {
-
+    /** Also counts the number of updates, not certain as to why yet. */
     private int updateCounter2;
+
+    /** Counts the number of screen updates. */
     private int updateCounter;
 
     public GuiIngameMenu()
@@ -28,100 +25,120 @@ public class GuiIngameMenu extends GuiScreen
         updateCounter = 0;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         updateCounter2 = 0;
         controlList.clear();
         byte byte0 = -16;
-        controlList.add(new GuiButton(1, width / 2 - 100, height / 4 + 120 + byte0, "Save and quit to title"));
-        if(mc.isMultiplayerWorld())
+        controlList.add(new GuiButton(1, width / 2 - 100, height / 4 + 120 + byte0, StatCollector.translateToLocal("menu.returnToMenu")));
+
+        if (mc.isMultiplayerWorld())
         {
-            ((GuiButton)controlList.get(0)).displayString = "Disconnect";
+            ((GuiButton)controlList.get(0)).displayString = StatCollector.translateToLocal("menu.disconnect");
         }
-        controlList.add(new GuiButton(4, width / 2 - 100, height / 4 + 24 + byte0, "Back to game"));
-        controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + byte0, "Options..."));
+
+        controlList.add(new GuiButton(4, width / 2 - 100, height / 4 + 24 + byte0, StatCollector.translateToLocal("menu.returnToGame")));
+        controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + byte0, StatCollector.translateToLocal("menu.options")));
         controlList.add(new GuiButton(5, width / 2 - 100, height / 4 + 48 + byte0, 98, 20, StatCollector.translateToLocal("gui.achievements")));
         controlList.add(new GuiButton(6, width / 2 + 2, height / 4 + 48 + byte0, 98, 20, StatCollector.translateToLocal("gui.stats")));
-
-		//====================
-		// START MODOPTIONSAPI
-		//====================
-		controlList.add(new GuiButton(30, width / 2 - 100, height / 4 + 148 + byte0, "Mod World Options"));		
-		//====================
-		// END MODOPTIONSAPI
-		//====================
+    		//====================
+    		// START MODOPTIONSAPI
+    		//====================
+    		controlList.add(new GuiButton(30, width / 2 - 100, height / 4 + 148 + byte0, "Mod World Options"));		
+    		//====================
+    		// END MODOPTIONSAPI
+    		//====================
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if(guibutton.id == 0)
+        if (par1GuiButton.id == 0)
         {
             mc.displayGuiScreen(new GuiOptions(this, mc.gameSettings));
         }
-        if(guibutton.id == 1)
+
+        if (par1GuiButton.id == 1)
         {
             mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
-            if(mc.isMultiplayerWorld())
+
+            if (mc.isMultiplayerWorld())
             {
                 mc.theWorld.sendQuittingDisconnectingPacket();
             }
+
             mc.changeWorld1(null);
             mc.displayGuiScreen(new GuiMainMenu());
         }
-        if(guibutton.id == 4)
+
+        if (par1GuiButton.id == 4)
         {
             mc.displayGuiScreen(null);
             mc.setIngameFocus();
         }
-        if(guibutton.id == 5)
+
+        if (par1GuiButton.id == 5)
         {
             mc.displayGuiScreen(new GuiAchievements(mc.statFileWriter));
         }
-        if(guibutton.id == 6)
+
+        if (par1GuiButton.id == 6)
         {
             mc.displayGuiScreen(new GuiStats(this, mc.statFileWriter));
         }
-		
-		//====================
-		// START MODOPTIONSAPI
-		//====================
-		if(guibutton.id == 30) {
-			// Multiplayer worlds have no name
-			if(mc.isMultiplayerWorld()) {	
-				// Grab server name from game settings file!
-				// By definition it must exist
-				String[] parts = mc.gameSettings.lastServer.split("_");
-				String name = parts[0];
-				mc.displayGuiScreen(new ModMenu(this, name, true));
-			} else {
-				// Get the world name
-				String name = mc.theWorld.getWorldInfo().getWorldName();
-				mc.displayGuiScreen(new ModMenu(this, name, false));
-			}
-		}
-		//====================
-		// END MODOPTIONSAPI
-		//====================
+    		//====================
+    		// START MODOPTIONSAPI
+    		//====================
+    		if(par1GuiButton.id == 30) {
+    			// Multiplayer worlds have no name
+    			if(mc.isMultiplayerWorld()) {	
+    				// Grab server name from game settings file!
+    				// By definition it must exist
+    				String[] parts = mc.gameSettings.lastServer.split("_");
+    				String name = parts[0];
+    				mc.displayGuiScreen(new ModMenu(this, name, true));
+    			} else {
+    				// Get the world name
+    				String name = mc.theWorld.getWorldInfo().getWorldName();
+    				mc.displayGuiScreen(new ModMenu(this, name, false));
+    			}
+    		}
+    		//====================
+    		// END MODOPTIONSAPI
+    		//====================
     }
 
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
         super.updateScreen();
         updateCounter++;
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         drawDefaultBackground();
         boolean flag = !mc.theWorld.quickSaveWorld(updateCounter2++);
-        if(flag || updateCounter < 20)
+
+        if (flag || updateCounter < 20)
         {
-            float f1 = ((float)(updateCounter % 10) + f) / 10F;
-            f1 = MathHelper.sin(f1 * 3.141593F * 2.0F) * 0.2F + 0.8F;
-            int k = (int)(255F * f1);
-            drawString(fontRenderer, "Saving level..", 8, height - 16, k << 16 | k << 8 | k);
+            float f = ((float)(updateCounter % 10) + par3) / 10F;
+            f = MathHelper.sin(f * (float)Math.PI * 2.0F) * 0.2F + 0.8F;
+            int i = (int)(255F * f);
+            drawString(fontRenderer, "Saving level..", 8, height - 16, i << 16 | i << 8 | i);
         }
+
         drawCenteredString(fontRenderer, "Game menu", width / 2, 40, 0xffffff);
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 }

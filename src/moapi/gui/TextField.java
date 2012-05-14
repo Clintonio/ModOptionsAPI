@@ -61,9 +61,9 @@ public class TextField extends TextInputField {
 		int 	j;
 		
         if(enabled && isFocused()) {
-			if(c == '\t') {
+			/* Method no longer in 1.2.4 - if(c == '\t') {
 				parentGuiScreen.selectNextField();
-			} else if(c == '\026') {
+			} else */ if(c == '\026') {
 				if(s == null) {
 					s = "";
 				}

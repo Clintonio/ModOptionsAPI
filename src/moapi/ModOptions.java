@@ -242,54 +242,6 @@ public class ModOptions {
 	}
 	
 	/**
-	* Adds a mapped multi option
-	*
-	* @deprecated Name out of use
-	* @throws 	IndexOutOfBoundsException
-	* @param	name	Name of selector
-	* @param	keys	Keys for selector
-	* @param	values	Values for selector
-	* @return	Returns the option just added for further operations
-	*/
-	public ModOption addMappedMultiOption(String name, Integer[] keys, String[] values) 
-		throws IndexOutOfBoundsException {
-		if(keys.length != values.length) {
-			throw new IndexOutOfBoundsException("Arrays are not same length");
-		} else {
-			ModMappedMultiOption option = new ModMappedMultiOption(name);
-			for(int x = 0; x < keys.length; x++) {
-				option.addValue(keys[x], values[x]);
-			}
-			
-			return addOption(option);
-		}
-	}
-	
-	/**
-	* Adds a mapped multi option
-	*
-	* @deprecated Name out of use
-	* @throws 	IndexOutOfBoundsException
-	* @param	name	Name of selector
-	* @param	keys	Keys for selector
-	* @param	values	Values for selector
-	* @return	Returns the option just added for further operations
-	*/
-	public ModOption addMappedMultiOption(String name, int[] keys, String[] values) 
-		throws IndexOutOfBoundsException {
-		if(keys.length != values.length) {
-			throw new IndexOutOfBoundsException("Arrays are not same length");
-		} else {
-			ModMappedMultiOption option = new ModMappedMultiOption(name);
-			for(int x = 0; x < keys.length; x++) {
-				option.addValue(new Integer(keys[x]), values[x]);
-			}
-			
-			return addOption(option);
-		}
-	}
-	
-	/**
 	* Adds a mapped option
 	*
 	* @throws 	IndexOutOfBoundsException
@@ -587,7 +539,7 @@ public class ModOptions {
 	}
 	
 	/**
-	* Returns a single named mapped multi option's value
+	* Returns a single named mapped option's value
 	*
 	* @since	0.6.1
 	* @throws	NoSuchOptionException	When no option is present
@@ -600,10 +552,10 @@ public class ModOptions {
 		
 		if(option == null) {
 			throw new NoSuchOptionException("No option identified by " + id);
-		} else if(!(option instanceof ModMappedMultiOption)) {
+		} else if(!(option instanceof ModMappedOption)) {
 			throw new IncompatibleOptionTypeException("Option " + id + " is not a mapped multi option");
 		} else {
-			return ((ModMappedMultiOption) option).getValue();
+			return ((ModMappedOption) option).getValue();
 		}
 	}
 	
@@ -646,8 +598,8 @@ public class ModOptions {
 			throw new NoSuchOptionException();
 		} else if(m instanceof ModSliderOption) {
 			((ModSliderOption) m).setGlobalValue(value);
-		} else if(m instanceof ModMappedMultiOption) {
-			((ModMappedMultiOption) m).setGlobalValue(value);
+		} else if(m instanceof ModMappedOption) {
+			((ModMappedOption) m).setGlobalValue(value);
 		} else if(m instanceof ModKeyOption) {
 			((ModKeyOption) m).setGlobalValue(value);
 		} else {
@@ -971,8 +923,8 @@ public class ModOptions {
 						} else if(o instanceof ModBooleanOption) {
 							ModBooleanOption b = (ModBooleanOption) o;
 							b.setValue(Boolean.valueOf(val), global);
-						} else if(o instanceof ModMappedMultiOption) {
-							ModMappedMultiOption t = (ModMappedMultiOption) o;
+						} else if(o instanceof ModMappedOption) {
+							ModMappedOption t = (ModMappedOption) o;
 							t.setValue(Integer.parseInt(val), global);
 						} else if(o instanceof ModKeyOption) {
 							ModKeyOption k 	= (ModKeyOption) o;

@@ -51,7 +51,7 @@ if [ "$REPLY" == "y" ]
 	cd $MODDIR
 	./recompile.sh
 	./reobfuscate.sh
-	./getmodsource.sh
+	./getchangedsrc.sh
 
 	cd $DIR
 

@@ -128,8 +128,8 @@ public class GuiController {
 			if(o instanceof ModSliderOption) {
 				ModSliderOption o2 = (ModSliderOption) o;
 				value = Float.toString(o2.getValue(!localMode));
-			} else if(o instanceof ModMappedMultiOption) {
-				ModMappedMultiOption o2 = (ModMappedMultiOption) o;
+			} else if(o instanceof ModMappedOption) {
+				ModMappedOption o2 = (ModMappedOption) o;
 				value = o2.getStringValue(o2.getValue(!localMode));
 			} else if(o instanceof ModMultiOption) {
 				value = ((ModMultiOption) o).getValue(!localMode);

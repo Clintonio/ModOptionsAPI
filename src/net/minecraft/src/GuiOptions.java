@@ -72,8 +72,9 @@ public class GuiOptions extends GuiScreen
     		//====================
     		// START MODOPTIONSAPI
     		//====================
-    		controlList.add(new GuiSmallButton(301, width / 2 - 155, height / 6 + 148, "MOAPI Options"));
-        controlList.add(new GuiSmallButton(300, width / 2 +   5, height / 6 + 148, "GUIAPI Settings"));
+    		controlList.add(new GuiButton(301, width / 2 - 100, (height / 6 + 148), "MOAPI Options"));
+    		//controlList.add(new GuiSmallButton(301, width / 2 - 155, height / 6 + 148, "MOAPI Options"));
+        //controlList.add(new GuiSmallButton(300, width / 2 +   5, height / 6 + 148, "GUIAPI Settings"));
     		//====================
     		// END MODOPTIONSAPI
     		//====================
@@ -122,12 +123,12 @@ public class GuiOptions extends GuiScreen
     		//====================
     		// START MODOPTIONSAPI
     		//====================
-    		if(par1GuiButton.id == 300) {
+    		/*if(par1GuiButton.id == 300) {
     			mc.gameSettings.saveOptions();
           ModSettingScreen.guiContext = "";
           WidgetSetting.updateAll();
           GuiModScreen.show(new GuiModSelect(this));
-        }
+        }*/
     		if(par1GuiButton.id == 301) {
     			mc.gameSettings.saveOptions();
     			mc.displayGuiScreen(new ModMenu(this));

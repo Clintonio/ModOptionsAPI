@@ -290,7 +290,7 @@ public class ModOptionsAPI {
 		} else if(type.equals("multi")) {
 			mo = (ModOption) new ModMultiOption(name, params);
 		} else if(type.equals("mappedmulti")) {
-			mo = (ModOption) parseMappedMultiOption(name, params, mod);
+			mo = (ModOption) parseMappedOption(name, params, mod);
 		} else if(type.equals("slider")) {
 			mo = parseSliderOption(name, params, mod);
 		} else if(type.equals("text")) {
@@ -308,8 +308,8 @@ public class ModOptionsAPI {
 	* Parse a mapped multi option
 	*
 	*/
-	private static  ModMappedMultiOption parseMappedMultiOption(String name, String[] params, ModOptions mod) {
-		ModMappedMultiOption mo = new ModMappedMultiOption(name);
+	private static ModMappedOption parseMappedOption(String name, String[] params, ModOptions mod) {
+		ModMappedOption mo = new ModMappedOption(name);
 		// add the sections
 		for(int i = 0; i < params.length; i++) {
 			String[] tmp = params[i].trim().split("=");

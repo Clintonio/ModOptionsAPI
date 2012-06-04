@@ -1,8 +1,8 @@
 ModOptionsAPI
 
 Author: Clinton Alexander
-Version: 8
-Compatible: Minecraft 1.0
+Version: 9
+Compatible: Minecraft 1.2.5
 Description: An API for allowing simple mod options menus in Minecraft Options menu.
 
 For non-developers, please go to "Installation"
@@ -79,6 +79,16 @@ API Features:
 ------------------
 Version History
 ------------------
+
+9 - Minecraft 1.2.5 Compatible
+
+(Overview)
+- WyrdOne made MOAPI compatible with 1.2.5
+- Removed ModMappedMultiOption
+
+(API changes)
+- ModMappedMultiOption has been removed
+-- Was a deprecated feature
 
 8 - Minecraft 1.1 Compatible
 

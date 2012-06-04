@@ -773,8 +773,8 @@ public class ModMenu extends GuiScreen {
 			btn.displayString = optionPressed((ModMultiOption) option);
 		} else if(option instanceof ModBooleanOption) {
 			btn.displayString = optionPressed((ModBooleanOption) option);
-		} else if(option instanceof ModMappedMultiOption) {
-			btn.displayString = optionPressed((ModMappedMultiOption) option);
+		} else if(option instanceof ModMappedOption) {
+			btn.displayString = optionPressed((ModMappedOption) option);
 		} else if(btn instanceof Slider) {
 			((Slider) btn).updateDisplayString();
 		}
@@ -823,7 +823,7 @@ public class ModMenu extends GuiScreen {
 	* @param	op	Option pressed
 	* @return	New text value
 	*/
-	private String optionPressed(ModMappedMultiOption op) {		
+	private String optionPressed(ModMappedOption op) {		
 		if(!worldMode) {
 			Integer nextVal = op.getNextValue(op.getGlobalValue());
 			op.setGlobalValue(nextVal);

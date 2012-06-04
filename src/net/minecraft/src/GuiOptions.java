@@ -2,22 +2,38 @@ package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
+//====================
+// START MODOPTIONSAPI
+//====================
 import moapi.gui.ModMenu; 
+//====================
+// END MODOPTIONSAPI
+//====================
 
 public class GuiOptions extends GuiScreen
 {
+    /**
+     * A reference to the screen object that created this. Used for navigating between screens.
+     */
     private GuiScreen parentScreen;
+
+    /** The title string that is displayed in the top-center of the screen. */
     protected String screenTitle;
+
+    /** Reference to the GameSettings object. */
     private GameSettings options;
     private static EnumOptions relevantOptions[];
 
-    public GuiOptions(GuiScreen guiscreen, GameSettings gamesettings)
+    public GuiOptions(GuiScreen par1GuiScreen, GameSettings par2GameSettings)
     {
         screenTitle = "Options";
-        parentScreen = guiscreen;
-        options = gamesettings;
+        parentScreen = par1GuiScreen;
+        options = par2GameSettings;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
@@ -25,87 +41,110 @@ public class GuiOptions extends GuiScreen
         int i = 0;
         EnumOptions aenumoptions[] = relevantOptions;
         int j = aenumoptions.length;
+
         for (int k = 0; k < j; k++)
         {
             EnumOptions enumoptions = aenumoptions[k];
+
             if (!enumoptions.getEnumFloat())
             {
                 GuiSmallButton guismallbutton = new GuiSmallButton(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, options.getKeyBinding(enumoptions));
+
                 if (enumoptions == EnumOptions.DIFFICULTY && mc.theWorld != null && mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
                 {
                     guismallbutton.enabled = false;
                     guismallbutton.displayString = (new StringBuilder()).append(StatCollector.translateToLocal("options.difficulty")).append(": ").append(StatCollector.translateToLocal("options.difficulty.hardcore")).toString();
                 }
+
                 controlList.add(guismallbutton);
             }
             else
             {
                 controlList.add(new GuiSlider(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, options.getKeyBinding(enumoptions), options.getOptionFloatValue(enumoptions)));
             }
+
             i++;
         }
 
-        controlList.add(new GuiButton(101, width / 2 - 100, (height / 6 + 96) , stringtranslate.translateKey("options.video")));
-        controlList.add(new GuiButton(100, width / 2 - 100, (height / 6 + 120), stringtranslate.translateKey("options.controls")));
-        controlList.add(new GuiButton(102, width / 2 - 100, (height / 6 + 144), stringtranslate.translateKey("options.language")));
-		//============
-		// OptionsAPI START
-		//============
-		controlList.add(new GuiButton(301, width / 2 - 100, height / 6 + 72, "Mod Options"));
-		//============
-		// OptionsAPI END
-		//============	
+        controlList.add(new GuiButton(101, width / 2 - 100, (height / 6 + 88), stringtranslate.translateKey("options.video")));
+        controlList.add(new GuiButton(100, width / 2 - 100, (height / 6 + 108), stringtranslate.translateKey("options.controls")));
+        controlList.add(new GuiButton(102, width / 2 - 100, (height / 6 + 128), stringtranslate.translateKey("options.language")));
+    		//====================
+    		// START MODOPTIONSAPI
+    		//====================
+    		controlList.add(new GuiSmallButton(301, width / 2 - 155, height / 6 + 148, "MOAPI Options"));
+        controlList.add(new GuiSmallButton(300, width / 2 +   5, height / 6 + 148, "GUIAPI Settings"));
+    		//====================
+    		// END MODOPTIONSAPI
+    		//====================
         controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168, stringtranslate.translateKey("gui.done")));
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (!guibutton.enabled)
+        if (!par1GuiButton.enabled)
         {
             return;
         }
-        if (guibutton.id < 100 && (guibutton instanceof GuiSmallButton))
+
+        if (par1GuiButton.id < 100 && (par1GuiButton instanceof GuiSmallButton))
         {
-            options.setOptionValue(((GuiSmallButton)guibutton).returnEnumOptions(), 1);
-            guibutton.displayString = options.getKeyBinding(EnumOptions.getEnumOptions(guibutton.id));
+            options.setOptionValue(((GuiSmallButton)par1GuiButton).returnEnumOptions(), 1);
+            par1GuiButton.displayString = options.getKeyBinding(EnumOptions.getEnumOptions(par1GuiButton.id));
         }
-        if (guibutton.id == 101)
+
+        if (par1GuiButton.id == 101)
         {
             mc.gameSettings.saveOptions();
             mc.displayGuiScreen(new GuiVideoSettings(this, options));
         }
-        if (guibutton.id == 100)
+
+        if (par1GuiButton.id == 100)
         {
             mc.gameSettings.saveOptions();
             mc.displayGuiScreen(new GuiControls(this, options));
         }
-        if (guibutton.id == 102)
+
+        if (par1GuiButton.id == 102)
         {
             mc.gameSettings.saveOptions();
             mc.displayGuiScreen(new GuiLanguage(this, options));
         }
-        if (guibutton.id == 200)
+
+        if (par1GuiButton.id == 200)
         {
             mc.gameSettings.saveOptions();
             mc.displayGuiScreen(parentScreen);
         }
-		//============
-		// OptionsAPI START
-		//============
-		if(guibutton.id == 301) {
-			mc.gameSettings.saveOptions();
-			mc.displayGuiScreen(new ModMenu(this));
-		}
-		//============
-		// OptionsAPI END
-		//============
+    		//====================
+    		// START MODOPTIONSAPI
+    		//====================
+    		if(par1GuiButton.id == 300) {
+    			mc.gameSettings.saveOptions();
+          ModSettingScreen.guiContext = "";
+          WidgetSetting.updateAll();
+          GuiModScreen.show(new GuiModSelect(this));
+        }
+    		if(par1GuiButton.id == 301) {
+    			mc.gameSettings.saveOptions();
+    			mc.displayGuiScreen(new ModMenu(this));
+    		}
+    		//====================
+    		// END MODOPTIONSAPI
+    		//====================
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         drawDefaultBackground();
         drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 
     static

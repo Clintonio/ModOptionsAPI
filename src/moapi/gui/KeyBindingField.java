@@ -75,10 +75,10 @@ public class KeyBindingField extends TextInputField {
 		
         if(enabled && isFocused()) {
 			// Tab
-			if(c == '\t') {
+			/* Method no longer in 1.2.4 - if(c == '\t') {
 				parentGuiScreen.selectNextField();
 			// Paste
-			} else if(c == '\026') {
+			} else */ if(c == '\026') {
 			// Enter a char
 			} else if(!ModKeyOption.isKeyBound(val)) {
 				setKey(val);

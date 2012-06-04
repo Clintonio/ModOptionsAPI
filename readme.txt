@@ -1,7 +1,7 @@
 ModOptionsAPI
 
 Author: Clinton Alexander
-Version: 7
+Version: 8
 Compatible: Minecraft 1.0
 Description: An API for allowing simple mod options menus in Minecraft Options menu.
 
@@ -79,6 +79,10 @@ API Features:
 ------------------
 Version History
 ------------------
+
+8 - Minecraft 1.1 Compatible
+
+- Made compatible with Minecraft 1.1
 
 7 - Minecraft 1.0 Compatible
 

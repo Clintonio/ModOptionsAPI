@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.text.DateFormat;
@@ -18,10 +14,8 @@ import moapi.ModOptions;
 //====================
 // END MODOPTIONSAPI
 //====================
-
 public class GuiSelectWorld extends GuiScreen
 {
-
     private final DateFormat dateFormatter = new SimpleDateFormat();
     protected GuiScreen parentScreen;
     protected String screenTitle;
@@ -75,7 +69,7 @@ public class GuiSelectWorld extends GuiScreen
     protected String getSaveName(int i)
     {
         String s = ((SaveFormatComparator)saveList.get(i)).getDisplayName();
-        if(s == null || MathHelper.stringNullOrLengthZero(s))
+        if (s == null || MathHelper.stringNullOrLengthZero(s))
         {
             StringTranslate stringtranslate = StringTranslate.getInstance();
             s = (new StringBuilder()).append(stringtranslate.translateKey("selectWorld.world")).append(" ").append(i + 1).toString();
@@ -98,14 +92,14 @@ public class GuiSelectWorld extends GuiScreen
 
     protected void actionPerformed(GuiButton guibutton)
     {
-        if(!guibutton.enabled)
+        if (!guibutton.enabled)
         {
             return;
         }
-        if(guibutton.id == 2)
+        if (guibutton.id == 2)
         {
             String s = getSaveName(selectedWorld);
-            if(s != null)
+            if (s != null)
             {
                 deleting = true;
                 StringTranslate stringtranslate = StringTranslate.getInstance();
@@ -116,23 +110,24 @@ public class GuiSelectWorld extends GuiScreen
                 GuiYesNo guiyesno = new GuiYesNo(this, s1, s2, s3, s4, selectedWorld);
                 mc.displayGuiScreen(guiyesno);
             }
-        } else
-        if(guibutton.id == 1)
+        }
+        else if (guibutton.id == 1)
         {
             selectWorld(selectedWorld);
-        } else
-        if(guibutton.id == 3)
+        }
+        else if (guibutton.id == 3)
         {
             mc.displayGuiScreen(new GuiCreateWorld(this));
-        } else
-        if(guibutton.id == 6)
+        }
+        else if (guibutton.id == 6)
         {
             mc.displayGuiScreen(new GuiRenameWorld(this, getSaveFileName(selectedWorld)));
-        } else
-        if(guibutton.id == 0)
+        }
+        else if (guibutton.id == 0)
         {
             mc.displayGuiScreen(parentScreen);
-        } else
+        }
+        else
         {
             worldSlotContainer.actionPerformed(guibutton);
         }
@@ -141,21 +136,22 @@ public class GuiSelectWorld extends GuiScreen
     public void selectWorld(int i)
     {
         mc.displayGuiScreen(null);
-        if(selected)
+        if (selected)
         {
             return;
         }
         selected = true;
         int j = ((SaveFormatComparator)saveList.get(i)).getGameType();
-        if(j == 0)
+        if (j == 0)
         {
             mc.playerController = new PlayerControllerSP(mc);
-        } else
+        }
+        else
         {
             mc.playerController = new PlayerControllerCreative(mc);
         }
         String s = getSaveFileName(i);
-        if(s == null)
+        if (s == null)
         {
             s = (new StringBuilder()).append("World").append(i).toString();
         }
@@ -172,10 +168,10 @@ public class GuiSelectWorld extends GuiScreen
 
     public void deleteWorld(boolean flag, int i)
     {
-        if(deleting)
+        if (deleting)
         {
             deleting = false;
-            if(flag)
+            if (flag)
             {
                 ISaveFormat isaveformat = mc.getSaveLoader();
                 isaveformat.flushCache();

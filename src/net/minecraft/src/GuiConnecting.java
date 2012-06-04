@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.PrintStream;
@@ -16,10 +12,8 @@ import moapi.ModOptions;
 //====================
 // END MODOPTIONSAPI
 //====================
-
 public class GuiConnecting extends GuiScreen
 {
-
     private NetClientHandler clientHandler;
     private boolean cancelled;
 
@@ -40,7 +34,7 @@ public class GuiConnecting extends GuiScreen
 
     public void updateScreen()
     {
-        if(clientHandler != null)
+        if (clientHandler != null)
         {
             clientHandler.processReadPackets();
         }
@@ -59,10 +53,10 @@ public class GuiConnecting extends GuiScreen
 
     protected void actionPerformed(GuiButton guibutton)
     {
-        if(guibutton.id == 0)
+        if (guibutton.id == 0)
         {
             cancelled = true;
-            if(clientHandler != null)
+            if (clientHandler != null)
             {
                 clientHandler.disconnect();
             }
@@ -74,11 +68,12 @@ public class GuiConnecting extends GuiScreen
     {
         drawDefaultBackground();
         StringTranslate stringtranslate = StringTranslate.getInstance();
-        if(clientHandler == null)
+        if (clientHandler == null)
         {
             drawCenteredString(fontRenderer, stringtranslate.translateKey("connect.connecting"), width / 2, height / 2 - 50, 0xffffff);
             drawCenteredString(fontRenderer, "", width / 2, height / 2 - 10, 0xffffff);
-        } else
+        }
+        else
         {
             drawCenteredString(fontRenderer, stringtranslate.translateKey("connect.authorizing"), width / 2, height / 2 - 50, 0xffffff);
             drawCenteredString(fontRenderer, clientHandler.field_1209_a, width / 2, height / 2 - 10, 0xffffff);
